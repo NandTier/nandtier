@@ -1,4 +1,5 @@
-<p align="center"><img src="docs/images/banner.png" alt="NandTier: a RISC-V computer you can read, build and play, on a $25 FPGA board" width="100%"></p>
+<p align="center"><img src="docs/images/demo.gif" alt="NandTier on real hardware: the Tang Nano 9K, the game menu on an HDMI screen, and a game played from the PC keyboard" width="100%"></p>
+<p align="center"><sub>Real hardware: a $25 Tang Nano 9K, an HDMI screen, and the PC keyboard as the controller.</sub></p>
 
 <p align="center">
   <a href="https://github.com/NandTier/nandtier/actions/workflows/ci.yml"><img src="https://github.com/NandTier/nandtier/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
