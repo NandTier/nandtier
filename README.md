@@ -1,5 +1,6 @@
-<p align="center"><img src="docs/images/demo.mp4" alt="NandTier on real hardware: the Tang Nano 9K, the game menu on an HDMI screen, and a game played from the PC keyboard" width="100%"></p>
-<p align="center"><sub>Real hardware: a $25 Tang Nano 9K, an HDMI screen, and the PC keyboard as the controller.</sub></p>
+<img width="560" height="315" alt="demo" src="https://github.com/user-attachments/assets/33d76b78-ccec-46df-8165-1c5b6076d97d" />
+
+https://github.com/user-attachments/assets/dc88310b-766f-451b-ac10-a833564b3444
 
 <p align="center">
   <a href="https://github.com/NandTier/nandtier/actions/workflows/ci.yml"><img src="https://github.com/NandTier/nandtier/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
