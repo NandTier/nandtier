@@ -1,0 +1,18 @@
+# Normalise line endings; keep Windows scripts as CRLF.
+* text=auto eol=lf
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+
+# Binary files
+*.fs   binary
+*.bin  binary
+*.img  binary
+*.png  binary
+*.gif  binary
+*.jpg  binary
+
+# GitHub language statistics: vendor-generated files are not NandTier's code
+gowin_ip/**        linguist-vendored
+project/src/**     linguist-generated
+*.ipc              linguist-generated
+*.mod              linguist-generated

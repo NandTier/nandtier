@@ -1,0 +1,164 @@
+#!/usr/bin/env python3
+# Copyright 2026 Abdul Muheet Ghani
+# SPDX-License-Identifier: Apache-2.0
+"""Random RV32IM program generator for the differential core test.
+
+    gen_random.py <seed> [n_instructions] > prog.S
+
+The program initialises x1..x29 with random values, runs a random mix of
+ALU, load/store, branch and jump instructions, stores registers to a
+signature area every few instructions and at the end, then writes 1 to
+TOHOST. Control flow only goes forward, so every program terminates.
+
+Register use: x31 points into the middle of a 4 KB random data window
+(every load/store is x31 + offset), x30 is the signature pointer. Both are
+never written by the random instructions; x0 sometimes is.
+"""
+
+import random
+import sys
+
+RD_POOL = list(range(1, 30))
+RS_POOL = list(range(0, 32))
+
+INTERESTING = [0, 1, 2, 31, 32, 0x7FF, 0x800, 0xFFF, 0x7FFFFFFF, 0x80000000,
+               0x80000001, 0xFFFFFFFF, 0xFFFFFFFE, 0x0000FFFF, 0xFFFF0000,
+               0x55555555, 0xAAAAAAAA]
+
+R_OPS = ["add", "sub", "sll", "slt", "sltu", "xor", "srl", "sra", "or", "and",
+         "mul", "mulh", "mulhsu", "mulhu", "div", "divu", "rem", "remu"]   # + M extension
+I_OPS = ["addi", "slti", "sltiu", "xori", "ori", "andi"]
+SH_OPS = ["slli", "srli", "srai"]
+BRANCHES = ["beq", "bne", "blt", "bge", "bltu", "bgeu"]
+LOADS = [("lb", 1), ("lbu", 1), ("lh", 2), ("lhu", 2), ("lw", 4)]
+STORES = [("sb", 1), ("sh", 2), ("sw", 4)]
+
+
+class Gen:
+    def __init__(self, seed):
+        self.r = random.Random(seed)
+        self.out = []
+        self.label = 0
+        self.sig_words = 0
+
+    def emit(self, s):
+        self.out.append("\t" + s)
+
+    def x(self, pool):
+        return "x%d" % self.r.choice(pool)
+
+    def rd(self):
+        # occasionally target x0, which must stay zero
+        return "x0" if self.r.random() < 0.03 else self.x(RD_POOL)
+
+    def value(self):
+        if self.r.random() < 0.4:
+            return self.r.choice(INTERESTING)
+        return self.r.getrandbits(32)
+
+    def imm12(self):
+        if self.r.random() < 0.3:
+            return self.r.choice([0, 1, -1, 2047, -2048, 0x7FF, -0x800 + 1])
+        return self.r.randint(-2048, 2047)
+
+    # Single 4-byte instructions without side effects on control flow,
+    # safe inside skipped regions where byte offsets are computed.
+    def simple(self):
+        k = self.r.random()
+        if k < 0.45:
+            self.emit("%s %s, %s, %s" % (self.r.choice(R_OPS), self.rd(), self.x(RS_POOL), self.x(RS_POOL)))
+        elif k < 0.75:
+            self.emit("%s %s, %s, %d" % (self.r.choice(I_OPS), self.rd(), self.x(RS_POOL), self.imm12()))
+        elif k < 0.9:
+            self.emit("%s %s, %s, %d" % (self.r.choice(SH_OPS), self.rd(), self.x(RS_POOL), self.r.randint(0, 31)))
+        else:
+            self.emit("lui %s, 0x%x" % (self.rd(), self.r.getrandbits(20)))
+
+    def mem_offset(self, size):
+        return self.r.randrange(-2048, 2048 - size + 1, size)
+
+    def one(self):
+        k = self.r.random()
+        if k < 0.40:
+            self.simple()
+        elif k < 0.45:
+            self.emit("auipc %s, 0x%x" % (self.rd(), self.r.getrandbits(20)))
+        elif k < 0.60:
+            op, size = self.r.choice(LOADS)
+            self.emit("%s %s, %d(x31)" % (op, self.rd(), self.mem_offset(size)))
+        elif k < 0.72:
+            op, size = self.r.choice(STORES)
+            self.emit("%s %s, %d(x31)" % (op, self.x(RS_POOL), self.mem_offset(size)))
+        elif k < 0.87:
+            # forward branch over 0..3 instructions
+            rs1 = self.x(RS_POOL)
+            rs2 = rs1 if self.r.random() < 0.2 else self.x(RS_POOL)
+            lbl = self.new_label()
+            self.emit("%s %s, %s, %s" % (self.r.choice(BRANCHES), rs1, rs2, lbl))
+            for _ in range(self.r.randint(0, 3)):
+                self.simple()
+            self.out.append(lbl + ":")
+        elif k < 0.93:
+            # jal over 0..2 instructions
+            lbl = self.new_label()
+            self.emit("jal %s, %s" % (self.rd(), lbl))
+            for _ in range(self.r.randint(0, 2)):
+                self.simple()
+            self.out.append(lbl + ":")
+        else:
+            # auipc t, 0 ; jalr rd, ofs(t) ; <skip> ; target
+            # ofs may be odd: jalr clears bit 0
+            skip = self.r.randint(0, 2)
+            t = self.x(RD_POOL)
+            ofs = 8 + 4 * skip + self.r.choice([0, 0, 1])
+            self.emit("auipc %s, 0" % t)
+            self.emit("jalr %s, %d(%s)" % (self.rd(), ofs, t))
+            for _ in range(skip):
+                self.simple()
+
+    def new_label(self):
+        self.label += 1
+        return "L%d" % self.label
+
+    def dump(self, regs):
+        for i, reg in enumerate(regs):
+            self.emit("sw x%d, %d(x30)" % (reg, 4 * i))
+        self.emit("addi x30, x30, %d" % (4 * len(regs)))
+        self.sig_words += len(regs)
+
+    def program(self, n):
+        self.out += [
+            "// generated by gen_random.py",
+            "\t.equ TOHOST, 0x10000000",
+            "\t.option norelax",
+            "\t.section .text.start",
+            "\t.globl _start",
+            "_start:",
+        ]
+        for reg in RD_POOL:
+            self.emit("li x%d, 0x%08x" % (reg, self.value()))
+        self.emit("la x31, data + 2048")
+        self.emit("la x30, sig")
+
+        for i in range(n):
+            self.one()
+            if i % 16 == 15:
+                self.dump(self.r.sample(range(1, 32), 4))
+
+        self.dump(range(1, 32))
+        self.emit("li x1, 1")
+        self.emit("li x2, TOHOST")
+        self.emit("sw x1, 0(x2)")
+        self.out.append("1:\tj 1b")
+
+        self.out += ["", "\t.data", "\t.align 4", "data:"]
+        for _ in range(1024):
+            self.emit(".word 0x%08x" % self.r.getrandbits(32))
+        self.out += ["", "\t.bss", "\t.align 4", "sig:", "\t.space %d" % (4 * self.sig_words)]
+        return "\n".join(self.out) + "\n"
+
+
+if __name__ == "__main__":
+    seed = int(sys.argv[1])
+    n = int(sys.argv[2]) if len(sys.argv) > 2 else 1000
+    sys.stdout.write(Gen(seed).program(n))

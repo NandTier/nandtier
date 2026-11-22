@@ -1,0 +1,404 @@
+mkdir -p build
+=== sw: nandtier-programmer ===
+python3 sw/test_programmer.py
+mkdir -p build/host
+iverilog -g2012 -Wall -Wno-timescale -s tb_alu -o build/tb_alu.vvp unit/tb_alu.v ../hw/core/nt_alu.v ../hw/core/nt_branch.v ../hw/core/nt_bus.v ../hw/core/nt_control.v ../hw/core/nt_csr.v ../hw/core/nt_decode.v ../hw/core/nt_execute.v ../hw/core/nt_fetch.v ../hw/core/nt_lsu.v ../hw/core/nt_regfile.v
+iverilog -g2012 -Wall -Wno-timescale -s tb_branch -o build/tb_branch.vvp unit/tb_branch.v ../hw/core/nt_alu.v ../hw/core/nt_branch.v ../hw/core/nt_bus.v ../hw/core/nt_control.v ../hw/core/nt_csr.v ../hw/core/nt_decode.v ../hw/core/nt_execute.v ../hw/core/nt_fetch.v ../hw/core/nt_lsu.v ../hw/core/nt_regfile.v
+=== firmware build ===
+gcc -O2 -Wall -Wextra -DGAME_HOST -I../fw/fw-flash -I../fw/include -o build/host/game_host \
+	host/game_host.c ../fw/fw-flash/game.c ../fw/fw-flash/game_assets.c
+make -C ../fw/fw-brom RISCV_NAME=riscv-none-embed RISCV_PATH=/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1
+iverilog -g2012 -Wall -Wno-timescale -s tb_decode -o build/tb_decode.vvp unit/tb_decode.v ../hw/core/nt_alu.v ../hw/core/nt_branch.v ../hw/core/nt_bus.v ../hw/core/nt_control.v ../hw/core/nt_csr.v ../hw/core/nt_decode.v ../hw/core/nt_execute.v ../hw/core/nt_fetch.v ../hw/core/nt_lsu.v ../hw/core/nt_regfile.v
+make[1]: Entering directory '/home/muheet/Music/nandtier/fw/fw-brom'
+make[1]: Nothing to be done for 'all'.
+make[1]: Leaving directory '/home/muheet/Music/nandtier/fw/fw-brom'
+make -C ../fw/fw-flash RISCV_NAME=riscv-none-embed RISCV_PATH=/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1
+iverilog -g2012 -Wall -Wno-timescale -s tb_lsu -o build/tb_lsu.vvp unit/tb_lsu.v ../hw/core/nt_alu.v ../hw/core/nt_branch.v ../hw/core/nt_bus.v ../hw/core/nt_control.v ../hw/core/nt_csr.v ../hw/core/nt_decode.v ../hw/core/nt_execute.v ../hw/core/nt_fetch.v ../hw/core/nt_lsu.v ../hw/core/nt_regfile.v
+make[1]: Entering directory '/home/muheet/Music/nandtier/fw/fw-flash'
+make[1]: Nothing to be done for 'all'.
+make[1]: Leaving directory '/home/muheet/Music/nandtier/fw/fw-flash'
+iverilog -g2012 -Wall -Wno-timescale -s tb_regfile -o build/tb_regfile.vvp unit/tb_regfile.v ../hw/core/nt_alu.v ../hw/core/nt_branch.v ../hw/core/nt_bus.v ../hw/core/nt_control.v ../hw/core/nt_csr.v ../hw/core/nt_decode.v ../hw/core/nt_execute.v ../hw/core/nt_fetch.v ../hw/core/nt_lsu.v ../hw/core/nt_regfile.v
+iverilog -g2012 -Wall -Wno-timescale -s tb_csr -o build/tb_csr.vvp unit/tb_csr.v ../hw/core/nt_alu.v ../hw/core/nt_branch.v ../hw/core/nt_bus.v ../hw/core/nt_control.v ../hw/core/nt_csr.v ../hw/core/nt_decode.v ../hw/core/nt_execute.v ../hw/core/nt_fetch.v ../hw/core/nt_lsu.v ../hw/core/nt_regfile.v
+iverilog -g2012 -Wall -Wno-timescale -s tb_uart -o build/tb_uart.vvp periph/tb_uart.v ../hw/periph/nt_uart.v
+iverilog -g2012 -Wall -Wno-timescale -s tb_gpio -o build/tb_gpio.vvp periph/tb_gpio.v ../hw/periph/nt_gpio.v
+iverilog -g2012 -Wall -Wno-timescale -s tb_spi_flash -o build/tb_spi_flash.vvp periph/tb_spi_flash.v ../hw/periph/nt_spi_flash.v ../sim/spi_flash_model.v
+iverilog -g2012 -Wall -Wno-timescale -s tb_flash_cache -o build/tb_flash_cache.vvp periph/tb_flash_cache.v ../hw/periph/nt_flash_cache.v ../hw/periph/nt_spi_flash.v ../sim/spi_flash_model.v
+iverilog -g2012 -Wall -Wno-timescale -s tb_sd_spi -o build/tb_sd_spi.vvp periph/tb_sd_spi.v ../hw/periph/nt_sd_spi.v
+iverilog -g2012 -Wall -Wno-timescale -s tb_bus_mux4 -o build/tb_bus_mux4.vvp bus/tb_bus_mux4.v ../hw/bus/nt_bus_mux4.v
+iverilog -g2012 -Wall -Wno-timescale -s tb_tmds -o build/tb_tmds.vvp video/tb_tmds.v ../hw/video/nt_tmds_encoder.v
+iverilog -g2012 -Wall -Wno-timescale -s tb_video_timing -o build/tb_video_timing.vvp video/tb_video_timing.v ../hw/video/nt_video_timing.v
+iverilog -g2012 -Wall -Wno-timescale -s tb_text_term -o build/tb_text_term.vvp video/tb_text_term.v ../hw/video/nt_text_term.v ../hw/video/nt_font_rom.v
+iverilog -g2012 -Wall -Wno-timescale -s tb_ppu -o build/tb_ppu.vvp video/tb_ppu.v ../hw/video/nt_ppu.v ../hw/video/nt_video_timing.v
+iverilog -g2012 -Wall -Wno-timescale -s tb_core -o build/tb_core.vvp core/tb_core.v core/tb_mem.v ../hw/nandtier_core.v ../hw/core/nt_alu.v ../hw/core/nt_branch.v ../hw/core/nt_bus.v ../hw/core/nt_control.v ../hw/core/nt_csr.v ../hw/core/nt_decode.v ../hw/core/nt_execute.v ../hw/core/nt_fetch.v ../hw/core/nt_lsu.v ../hw/core/nt_regfile.v
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -o build/test_isa.elf core/test_isa.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -o build/test_c.elf core/start.S core/test_c.c -lgcc
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -DCASE=1 -o build/test_trap_1.elf core/test_trap.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -DCASE=2 -o build/test_trap_2.elf core/test_trap.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -DCASE=3 -o build/test_trap_3.elf core/test_trap.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -DCASE=4 -o build/test_trap_4.elf core/test_trap.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -DCASE=5 -o build/test_trap_5.elf core/test_trap.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -DCASE=6 -o build/test_trap_6.elf core/test_trap.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -DCASE=7 -o build/test_trap_7.elf core/test_trap.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -DCASE=8 -o build/test_trap_8.elf core/test_trap.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -DCASE=9 -o build/test_trap_9.elf core/test_trap.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -DCASE=10 -o build/test_trap_10.elf core/test_trap.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -DCASE=11 -o build/test_trap_11.elf core/test_trap.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -DCASE=12 -o build/test_trap_12.elf core/test_trap.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -DCASE=13 -o build/test_trap_13.elf core/test_trap.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -DCASE=14 -o build/test_trap_14.elf core/test_trap.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -DCASE=15 -o build/test_trap_15.elf core/test_trap.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -DCASE=16 -o build/test_trap_16.elf core/test_trap.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/test_isa.elf build/test_isa.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/test_isa.elf > build/test_isa.asm
+python3 core/gen_random.py 1 1000 > build/random_1.S
+python3 core/gen_random.py 2 1000 > build/random_2.S
+python3 core/gen_random.py 3 1000 > build/random_3.S
+python3 core/gen_random.py 4 1000 > build/random_4.S
+python3 core/gen_random.py 5 1000 > build/random_5.S
+python3 core/gen_random.py 6 1000 > build/random_6.S
+python3 core/gen_random.py 7 1000 > build/random_7.S
+python3 core/gen_random.py 8 1000 > build/random_8.S
+python3 core/gen_random.py 9 1000 > build/random_9.S
+python3 core/gen_random.py 10 1000 > build/random_10.S
+python3 core/gen_random.py 11 1000 > build/random_11.S
+python3 core/gen_random.py 12 1000 > build/random_12.S
+python3 core/gen_random.py 13 1000 > build/random_13.S
+python3 core/gen_random.py 14 1000 > build/random_14.S
+python3 core/gen_random.py 15 1000 > build/random_15.S
+python3 core/gen_random.py 16 1000 > build/random_16.S
+python3 core/gen_random.py 17 1000 > build/random_17.S
+python3 core/gen_random.py 18 1000 > build/random_18.S
+python3 core/gen_random.py 19 1000 > build/random_19.S
+python3 core/gen_random.py 20 1000 > build/random_20.S
+=== unit: nt_alu ===
+vvp -n build/tb_alu.vvp  | tee build/unit_alu.log
+=== unit: nt_branch ===
+vvp -n build/tb_branch.vvp  | tee build/unit_branch.log
+=== unit: nt_decode ===
+vvp -n build/tb_decode.vvp  | tee build/unit_decode.log
+=== unit: nt_lsu ===
+vvp -n build/tb_lsu.vvp  | tee build/unit_lsu.log
+PASS: nt_lsu (4000 checks)
+=== unit: nt_regfile ===
+vvp -n build/tb_regfile.vvp  | tee build/unit_regfile.log
+=== unit: nt_csr ===
+vvp -n build/tb_csr.vvp  | tee build/unit_csr.log
+PASS: nt_csr (4108 checks)
+=== tb_uart ===
+vvp -n build/tb_uart.vvp  | tee build/tb_uart.log
+PASS: nt_branch (30216 checks)
+=== tb_gpio ===
+vvp -n build/tb_gpio.vvp  | tee build/tb_gpio.log
+PASS: nt_gpio
+=== tb_spi_flash ===
+vvp -n build/tb_spi_flash.vvp  | tee build/tb_spi_flash.log
+PASS: nt_regfile (20000 checks)
+=== tb_flash_cache ===
+vvp -n build/tb_flash_cache.vvp  | tee build/tb_flash_cache.log
+PASS: nt_uart
+=== tb_sd_spi ===
+vvp -n build/tb_sd_spi.vvp  | tee build/tb_sd_spi.log
+PASS: nt_sd_spi
+=== tb_bus_mux4 ===
+vvp -n build/tb_bus_mux4.vvp  | tee build/tb_bus_mux4.log
+PASS: nt_bus_mux4 (21 checks)
+=== tb_tmds ===
+vvp -n build/tb_tmds.vvp  | tee build/tb_tmds.log
+PASS: nandtier-programmer (1376972 flash bytes, 3 SD blocks)
+=== tb_video_timing ===
+vvp -n build/tb_video_timing.vvp  | tee build/tb_video_timing.log
+  single: 73 cycles per sequential word
+  dual: 41 cycles per sequential word
+  dual+crm: 41 cycles per sequential word
+PASS: nt_spi_flash
+=== tb_text_term ===
+vvp -n build/tb_text_term.vvp  | tee build/tb_text_term.log
+PASS: nt_flash_cache (177 hits answered in one cycle)
+=== tb_ppu ===
+vvp -n build/tb_ppu.vvp  | tee build/tb_ppu.log
+PASS: nt_text_term
+=== core: RV32I instruction test ===
+vvp -n build/tb_core.vvp +hex=build/test_isa.hex | tee build/test_isa.log
+PASS: nt_alu (51320 checks)
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/test_c.elf build/test_c.hex
+PASS: build/test_isa.hex (2196 cycles)
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/test_c.elf > build/test_c.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/test_trap_1.elf build/test_trap_1.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/test_trap_1.elf > build/test_trap_1.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/test_trap_2.elf build/test_trap_2.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/test_trap_2.elf > build/test_trap_2.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/test_trap_3.elf build/test_trap_3.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/test_trap_3.elf > build/test_trap_3.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/test_trap_4.elf build/test_trap_4.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/test_trap_5.elf build/test_trap_5.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/test_trap_4.elf > build/test_trap_4.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/test_trap_5.elf > build/test_trap_5.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/test_trap_6.elf build/test_trap_6.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/test_trap_7.elf build/test_trap_7.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/test_trap_6.elf > build/test_trap_6.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/test_trap_7.elf > build/test_trap_7.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/test_trap_8.elf build/test_trap_8.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/test_trap_9.elf build/test_trap_9.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/test_trap_9.elf > build/test_trap_9.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/test_trap_8.elf > build/test_trap_8.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/test_trap_10.elf build/test_trap_10.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/test_trap_10.elf > build/test_trap_10.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/test_trap_11.elf build/test_trap_11.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/test_trap_11.elf > build/test_trap_11.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/test_trap_12.elf build/test_trap_12.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/test_trap_13.elf build/test_trap_13.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/test_trap_12.elf > build/test_trap_12.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/test_trap_13.elf > build/test_trap_13.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/test_trap_14.elf build/test_trap_14.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/test_trap_14.elf > build/test_trap_14.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/test_trap_15.elf build/test_trap_15.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/test_trap_16.elf build/test_trap_16.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/test_trap_15.elf > build/test_trap_15.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/test_trap_16.elf > build/test_trap_16.asm
+=== core: trap case 2 ===
+vvp -n build/tb_core.vvp +hex=build/test_trap_2.hex +expect_trap | tee build/test_trap_2.log
+=== core: trap case 1 ===
+vvp -n build/tb_core.vvp +hex=build/test_trap_1.hex +expect_trap | tee build/test_trap_1.log
+PASS: build/test_trap_2.hex trapped as expected (35 cycles)
+PASS: build/test_trap_1.hex trapped as expected (35 cycles)
+=== core: trap case 3 ===
+=== core: trap case 4 ===
+vvp -n build/tb_core.vvp +hex=build/test_trap_3.hex +expect_trap | tee build/test_trap_3.log
+vvp -n build/tb_core.vvp +hex=build/test_trap_4.hex +expect_trap | tee build/test_trap_4.log
+PASS: build/test_trap_3.hex trapped as expected (35 cycles)
+=== core: trap case 5 ===
+vvp -n build/tb_core.vvp +hex=build/test_trap_5.hex +expect_trap | tee build/test_trap_5.log
+PASS: build/test_trap_4.hex trapped as expected (35 cycles)
+=== core: trap case 6 ===
+vvp -n build/tb_core.vvp +hex=build/test_trap_6.hex +expect_trap | tee build/test_trap_6.log
+PASS: build/test_trap_5.hex trapped as expected (35 cycles)
+=== core: trap case 7 ===
+vvp -n build/tb_core.vvp +hex=build/test_trap_7.hex +expect_trap | tee build/test_trap_7.log
+PASS: build/test_trap_6.hex trapped as expected (35 cycles)
+=== core: trap case 8 ===
+vvp -n build/tb_core.vvp +hex=build/test_trap_8.hex +expect_trap | tee build/test_trap_8.log
+PASS: build/test_trap_7.hex trapped as expected (35 cycles)
+=== core: trap case 9 ===
+vvp -n build/tb_core.vvp +hex=build/test_trap_9.hex +expect_trap | tee build/test_trap_9.log
+PASS: build/test_trap_8.hex trapped as expected (43 cycles)
+=== core: trap case 10 ===
+vvp -n build/tb_core.vvp +hex=build/test_trap_10.hex +expect_trap | tee build/test_trap_10.log
+PASS: build/test_trap_9.hex trapped as expected (35 cycles)
+=== core: trap case 11 ===
+vvp -n build/tb_core.vvp +hex=build/test_trap_11.hex +expect_trap | tee build/test_trap_11.log
+PASS: build/test_trap_10.hex trapped as expected (35 cycles)
+=== core: trap case 12 ===
+vvp -n build/tb_core.vvp +hex=build/test_trap_12.hex +expect_trap | tee build/test_trap_12.log
+PASS: build/test_trap_11.hex trapped as expected (35 cycles)
+=== core: trap case 13 ===
+vvp -n build/tb_core.vvp +hex=build/test_trap_13.hex +expect_trap | tee build/test_trap_13.log
+PASS: build/test_trap_12.hex trapped as expected (43 cycles)
+=== core: trap case 14 ===
+vvp -n build/tb_core.vvp +hex=build/test_trap_14.hex +expect_trap | tee build/test_trap_14.log
+PASS: build/test_trap_13.hex trapped as expected (35 cycles)
+=== core: trap case 15 ===
+vvp -n build/tb_core.vvp +hex=build/test_trap_15.hex +expect_trap | tee build/test_trap_15.log
+PASS: build/test_trap_14.hex trapped as expected (35 cycles)
+=== core: trap case 16 ===
+vvp -n build/tb_core.vvp +hex=build/test_trap_16.hex +expect_trap | tee build/test_trap_16.log
+PASS: build/test_trap_15.hex trapped as expected (35 cycles)
+=== core: bus latency variants ===
+vvp -n build/tb_core.vvp +hex=build/test_isa.hex +lat=0 | tee build/test_isa_lat0.log
+PASS: build/test_trap_16.hex trapped as expected (35 cycles)
+=== core: C program test ===
+vvp -n build/tb_core.vvp +hex=build/test_c.hex | tee build/test_c.log
+NandTier core C test
+PASS: build/test_isa.hex (1646 cycles)
+vvp -n build/tb_core.vvp +hex=build/test_isa.hex +lat=4 | tee build/test_isa_lat4.log
+PASS: build/test_isa.hex (3846 cycles)
+vvp -n build/tb_core.vvp +hex=build/test_isa.hex +rand_lat | tee build/test_isa_rand.log
+PASS: build/test_isa.hex (2795 cycles)
+vvp -n build/tb_core.vvp +hex=build/test_c.hex +lat=0 | tee build/test_c_lat0.log
+NandTier core C test
+PASS: nt_decode (67500 checks, 16303 legal encodings)
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -o build/random_1.elf build/random_1.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -o build/random_2.elf build/random_2.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -o build/random_3.elf build/random_3.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -o build/random_4.elf build/random_4.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -o build/random_5.elf build/random_5.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -o build/random_6.elf build/random_6.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -o build/random_7.elf build/random_7.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -o build/random_8.elf build/random_8.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -o build/random_9.elf build/random_9.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -o build/random_10.elf build/random_10.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -o build/random_11.elf build/random_11.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -o build/random_12.elf build/random_12.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -o build/random_13.elf build/random_13.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -o build/random_14.elf build/random_14.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -o build/random_15.elf build/random_15.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -o build/random_16.elf build/random_16.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -o build/random_17.elf build/random_17.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -o build/random_18.elf build/random_18.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -o build/random_19.elf build/random_19.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-gcc -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib -nostartfiles -T core/link.ld -Wl,--gc-sections -o build/random_20.elf build/random_20.S
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/random_1.elf build/random_1.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/random_1.elf > build/random_1.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/random_2.elf build/random_2.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/random_2.elf > build/random_2.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/random_3.elf build/random_3.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/random_3.elf > build/random_3.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/random_4.elf build/random_4.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/random_4.elf > build/random_4.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/random_5.elf build/random_5.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/random_5.elf > build/random_5.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/random_6.elf build/random_6.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/random_6.elf > build/random_6.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/random_7.elf build/random_7.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/random_7.elf > build/random_7.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/random_8.elf build/random_8.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/random_8.elf > build/random_8.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/random_9.elf build/random_9.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/random_9.elf > build/random_9.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/random_10.elf build/random_10.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/random_10.elf > build/random_10.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/random_11.elf build/random_11.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/random_11.elf > build/random_11.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/random_12.elf build/random_12.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/random_12.elf > build/random_12.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/random_13.elf build/random_13.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/random_13.elf > build/random_13.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/random_14.elf build/random_14.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/random_14.elf > build/random_14.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/random_15.elf build/random_15.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/random_15.elf > build/random_15.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/random_16.elf build/random_16.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/random_16.elf > build/random_16.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/random_17.elf build/random_17.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/random_17.elf > build/random_17.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/random_18.elf build/random_18.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/random_18.elf > build/random_18.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/random_19.elf build/random_19.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/random_19.elf > build/random_19.asm
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objcopy -O verilog build/random_20.elf build/random_20.hex
+/home/muheet/Music/xpack-riscv-none-embed-gcc-8.2.0-3.1-linux-x64/xPacks/riscv-none-embed-gcc/8.2.0-3.1/bin/riscv-none-embed-objdump -d build/random_20.elf > build/random_20.asm
+=== game: NandTier Hopper rules ===
+python3 host/test_game.py build/host/game_host ../fw/fw-flash/build/game_gfx.bin build/host
+  ok: title screen TITLE
+  ok: stomping a slime scores and keeps the hero alive (20 jump timings)
+  ok: hitting a ? block gives a coin (5 jump timings)
+  ok: falling into a pit DYING
+  ok: three deaths: game over GAME_OVER
+  ok: flag pole of 1-1 leads to 1-2 PLAY level 2
+  ok: flag pole of 1-2: the end WIN
+  ok: SD graphics pack loads the same graphics 
+PASS: game (NandTier Hopper rules on the PC build)
+=== random: seed 1 ===
+vvp -n build/tb_core.vvp +hex=build/random_1.hex +rand_lat +storelog=build/random_1.stores | tee build/random_1_rtl.log
+crc32 = 0xcbf43926
+all checks paPASS: build/random_1.hex (10223 cycles)
+sspython3 core/rv32i_iss.py build/random_1.hex build/random_1.stores
+ed
+PASS: build/test_c.hex (109076 cycles)
+=== random: seed 2 ===
+vvp -n build/tb_core.vvp +hex=build/random_2.hex +rand_lat +storelog=build/random_2.stores | tee build/random_2_rtl.log
+PASS: build/random_1.hex (384 writes match the reference model)
+=== random: seed 3 ===
+vvp -n build/tb_core.vvp +hex=build/random_3.hex +rand_lat +storelog=build/random_3.stores | tee build/random_3_rtl.log
+crc32 = 0xcbf43926
+PASS: build/random_2.hex (10158 cycles)
+python3 core/rv32i_iss.py build/random_2.hex build/random_2.stores
+all checks passed
+PASS: build/test_c.hex (80227 cycles)
+vvp -n build/tb_core.vvp +hex=build/test_c.hex +rand_lat | tee build/test_c_rand.log
+PASS: build/random_2.hex (396 writes match the reference model)
+=== random: seed 4 ===
+vvp -n build/tb_core.vvp +hex=build/random_4.hex +rand_lat +storelog=build/random_4.stores | tee build/random_4_rtl.log
+NandTier core C test
+PASS: build/random_3.hex (10241 cycles)
+python3 core/rv32i_iss.py build/random_3.hex build/random_3.stores
+PASS: build/random_3.hex (401 writes match the reference model)
+=== random: seed 5 ===
+vvp -n build/tb_core.vvp +hex=build/random_5.hex +rand_lat +storelog=build/random_5.stores | tee build/random_5_rtl.log
+PASS: build/random_4.hex (10229 cycles)
+python3 core/rv32i_iss.py build/random_4.hex build/random_4.stores
+PASS: build/random_4.hex (407 writes match the reference model)
+=== random: seed 6 ===
+vvp -n build/tb_core.vvp +hex=build/random_6.hex +rand_lat +storelog=build/random_6.stores | tee build/random_6_rtl.log
+PASS: build/random_5.hex (10456 cycles)
+python3 core/rv32i_iss.py build/random_5.hex build/random_5.stores
+PASS: build/random_5.hex (417 writes match the reference model)
+=== random: seed 7 ===
+vvp -n build/tb_core.vvp +hex=build/random_7.hex +rand_lat +storelog=build/random_7.stores | tee build/random_7_rtl.log
+PASS: nt_video_timing
+=== random: seed 8 ===
+vvp -n build/tb_core.vvp +hex=build/random_8.hex +rand_lat +storelog=build/random_8.stores | tee build/random_8_rtl.log
+PASS: build/random_6.hex (10316 cycles)
+python3 core/rv32i_iss.py build/random_6.hex build/random_6.stores
+PASS: build/random_6.hex (384 writes match the reference model)
+=== random: seed 9 ===
+vvp -n build/tb_core.vvp +hex=build/random_9.hex +rand_lat +storelog=build/random_9.stores | tee build/random_9_rtl.log
+PASS: build/random_7.hex (10109 cycles)
+python3 core/rv32i_iss.py build/random_7.hex build/random_7.stores
+PASS: build/random_7.hex (412 writes match the reference model)
+=== random: seed 10 ===
+vvp -n build/tb_core.vvp +hex=build/random_10.hex +rand_lat +storelog=build/random_10.stores | tee build/random_10_rtl.log
+PASS: build/random_8.hex (10230 cycles)
+python3 core/rv32i_iss.py build/random_8.hex build/random_8.stores
+PASS: build/random_8.hex (410 writes match the reference model)
+=== random: seed 11 ===
+vvp -n build/tb_core.vvp +hex=build/random_11.hex +rand_lat +storelog=build/random_11.stores | tee build/random_11_rtl.log
+PASS: build/random_9.hex (10209 cycles)
+python3 core/rv32i_iss.py build/random_9.hex build/random_9.stores
+PASS: build/random_9.hex (389 writes match the reference model)
+=== random: seed 12 ===
+vvp -n build/tb_core.vvp +hex=build/random_12.hex +rand_lat +storelog=build/random_12.stores | tee build/random_12_rtl.log
+PASS: build/random_10.hex (10283 cycles)
+python3 core/rv32i_iss.py build/random_10.hex build/random_10.stores
+PASS: build/random_10.hex (393 writes match the reference model)
+=== random: seed 13 ===
+vvp -n build/tb_core.vvp +hex=build/random_13.hex +rand_lat +storelog=build/random_13.stores | tee build/random_13_rtl.log
+PASS: build/random_11.hex (10275 cycles)
+python3 core/rv32i_iss.py build/random_11.hex build/random_11.stores
+PASS: build/random_12.hex (10373 cycles)
+PASS: build/random_11.hex (404 writes match the reference model)
+python3 core/rv32i_iss.py build/random_12.hex build/random_12.stores
+=== random: seed 14 ===
+vvp -n build/tb_core.vvp +hex=build/random_14.hex +rand_lat +storelog=build/random_14.stores | tee build/random_14_rtl.log
+PASS: build/random_12.hex (419 writes match the reference model)
+=== random: seed 15 ===
+vvp -n build/tb_core.vvp +hex=build/random_15.hex +rand_lat +storelog=build/random_15.stores | tee build/random_15_rtl.log
+PASS: build/random_13.hex (10210 cycles)
+python3 core/rv32i_iss.py build/random_13.hex build/random_13.stores
+PASS: build/random_13.hex (401 writes match the reference model)
+=== random: seed 16 ===
+vvp -n build/tb_core.vvp +hex=build/random_16.hex +rand_lat +storelog=build/random_16.stores | tee build/random_16_rtl.log
+PASS: build/random_16.hex (10143 cycles)
+python3 core/rv32i_iss.py build/random_16.hex build/random_16.stores
+PASS: nt_tmds_encoder (128000 symbols)
+=== random: seed 17 ===
+vvp -n build/tb_core.vvp +hex=build/random_17.hex +rand_lat +storelog=build/random_17.stores | tee build/random_17_rtl.log
+PASS: build/random_14.hex (10259 cycles)
+python3 core/rv32i_iss.py build/random_14.hex build/random_14.stores
+PASS: build/random_16.hex (389 writes match the reference model)
+=== random: seed 18 ===
+vvp -n build/tb_core.vvp +hex=build/random_18.hex +rand_lat +storelog=build/random_18.stores | tee build/random_18_rtl.log
+PASS: build/random_15.hex (10342 cycles)
+python3 core/rv32i_iss.py build/random_15.hex build/random_15.stores
+PASS: build/random_14.hex (396 writes match the reference model)
+=== random: seed 19 ===
+vvp -n build/tb_core.vvp +hex=build/random_19.hex +rand_lat +storelog=build/random_19.stores | tee build/random_19_rtl.log
+PASS: build/random_15.hex (392 writes match the reference model)
+=== random: seed 20 ===
+vvp -n build/tb_core.vvp +hex=build/random_20.hex +rand_lat +storelog=build/random_20.stores | tee build/random_20_rtl.log
+PASS: build/random_19.hex (10273 cycles)
+python3 core/rv32i_iss.py build/random_19.hex build/random_19.stores
+PASS: build/random_19.hex (416 writes match the reference model)
+PASS: build/random_18.hex (10025 cycles)
+python3 core/rv32i_iss.py build/random_18.hex build/random_18.stores
+PASS: build/random_17.hex (10427 cycles)
+python3 core/rv32i_iss.py build/random_17.hex build/random_17.stores
+PASS: build/random_18.hex (395 writes match the reference model)
+PASS: build/random_17.hex (391 writes match the reference model)
+PASS: build/random_20.hex (10281 cycles)
+python3 core/rv32i_iss.py build/random_20.hex build/random_20.stores
+PASS: build/random_20.hex (398 writes match the reference model)
+crc32 = 0xcbf43926
+all checks passed
+PASS: build/test_c.hex (138169 cycles)
+PASS: nt_ppu (184320 pixels in 3 frames)
+=== all NandTier tests done ===

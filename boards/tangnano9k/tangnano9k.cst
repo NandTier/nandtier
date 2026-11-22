@@ -1,0 +1,67 @@
+// Copyright 2026 Abdul Muheet Ghani
+// SPDX-License-Identifier: Apache-2.0
+//
+// NandTier pins on the Tang Nano 9K (GW1NR-LV9QN88PC6/I5), for nextpnr and
+// gowin_pack (the open-source flow in oss/).
+
+// 27 MHz crystal, S1 button
+IO_LOC  "clk" 52;
+IO_PORT "clk" IO_TYPE=LVCMOS33 PULL_MODE=UP;
+IO_LOC  "resetn" 4;
+IO_PORT "resetn" PULL_MODE=UP;
+
+// HDMI: emulated LVDS pairs (ELVDS_OBUF), positive and negative pin
+IO_LOC  "tmds_clk_p" 69;
+IO_LOC  "tmds_clk_n" 68;
+IO_LOC  "tmds_d_p[0]" 71;
+IO_LOC  "tmds_d_n[0]" 70;
+IO_LOC  "tmds_d_p[1]" 73;
+IO_LOC  "tmds_d_n[1]" 72;
+IO_LOC  "tmds_d_p[2]" 75;
+IO_LOC  "tmds_d_n[2]" 74;
+IO_PORT "tmds_clk_p" PULL_MODE=NONE DRIVE=8;
+IO_PORT "tmds_d_p[0]" PULL_MODE=NONE DRIVE=8;
+IO_PORT "tmds_d_p[1]" PULL_MODE=NONE DRIVE=8;
+IO_PORT "tmds_d_p[2]" PULL_MODE=NONE DRIVE=8;
+
+// UART through the on-board BL702 (USB)
+IO_LOC  "ser_tx" 17;
+IO_PORT "ser_tx" IO_TYPE=LVCMOS33 PULL_MODE=UP DRIVE=8;
+IO_LOC  "ser_rx" 18;
+IO_PORT "ser_rx" IO_TYPE=LVCMOS33 PULL_MODE=UP;
+
+// SPI flash on the MSPI pins (gowin_pack --mspi_as_gpio)
+IO_LOC  "flash_clk" 59;
+IO_PORT "flash_clk" IO_TYPE=LVCMOS33 PULL_MODE=UP DRIVE=8;
+IO_LOC  "flash_csb" 60;
+IO_PORT "flash_csb" IO_TYPE=LVCMOS33 PULL_MODE=UP DRIVE=8;
+IO_LOC  "flash_mosi" 61;
+IO_PORT "flash_mosi" IO_TYPE=LVCMOS33 PULL_MODE=UP DRIVE=8;
+IO_LOC  "flash_miso" 62;
+IO_PORT "flash_miso" IO_TYPE=LVCMOS33 PULL_MODE=UP DRIVE=8;
+
+// SD card slot
+IO_LOC  "sd_clk" 36;
+IO_PORT "sd_clk" IO_TYPE=LVCMOS33 PULL_MODE=NONE DRIVE=8;
+IO_LOC  "sd_mosi" 37;
+IO_PORT "sd_mosi" IO_TYPE=LVCMOS33 PULL_MODE=NONE DRIVE=8;
+IO_LOC  "sd_cs" 38;
+IO_PORT "sd_cs" IO_TYPE=LVCMOS33 PULL_MODE=NONE DRIVE=8;
+IO_LOC  "sd_miso" 39;
+IO_PORT "sd_miso" IO_TYPE=LVCMOS33 PULL_MODE=NONE;
+
+// LEDs 1-6 (active low) and pin 3
+IO_LOC  "gpio[0]" 10;
+IO_PORT "gpio[0]" PULL_MODE=UP DRIVE=8;
+IO_LOC  "gpio[1]" 11;
+IO_PORT "gpio[1]" PULL_MODE=UP DRIVE=8;
+IO_LOC  "gpio[2]" 13;
+IO_PORT "gpio[2]" PULL_MODE=UP DRIVE=8;
+IO_LOC  "gpio[3]" 14;
+IO_PORT "gpio[3]" PULL_MODE=UP DRIVE=8;
+IO_LOC  "gpio[4]" 15;
+IO_PORT "gpio[4]" PULL_MODE=UP DRIVE=8;
+IO_LOC  "gpio[5]" 16;
+IO_PORT "gpio[5]" PULL_MODE=UP DRIVE=8;
+IO_LOC  "gpio[6]" 3;
+IO_PORT "gpio[6]" PULL_MODE=UP DRIVE=8;

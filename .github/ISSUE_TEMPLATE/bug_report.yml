@@ -1,0 +1,46 @@
+name: Bug report
+description: Something does not build, does not pass a test, or does not work on the board.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for reporting. The more exact the steps, the faster it gets fixed.
+  - type: dropdown
+    id: board
+    attributes:
+      label: Board
+      options: [Tang Nano 9K, Tang Nano 20K, ULX3S, simulation only, other]
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options: [Linux, macOS, Windows, Windows + WSL]
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: NandTier version or commit
+      placeholder: v1.0.0 or the output of `git rev-parse --short HEAD`
+  - type: textarea
+    id: steps
+    attributes:
+      label: What you ran
+      description: The exact commands, in order.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected, and what happened
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: Output
+      description: Paste the end of the build or test output, or `setup/setup.sh --check`.
+      render: text

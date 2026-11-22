@@ -1,0 +1,31 @@
+# build outputs
+fw/fw-brom/build/
+fw/fw-flash/build/
+test/build/
+sim/build/
+fw/sdk/build/
+fw/games/build/
+fw/games/*/build/
+oss/build/
+__pycache__/
+
+# local tools and settings (setup/setup.sh, setup/setup.ps1)
+tools/
+local.mk
+env.sh
+env.ps1
+env.bat
+setup/cache/
+
+# Gowin IDE outputs and per-user settings
+project/impl/
+project/*.gprj.user
+*.fs
+!docs/**/*.fs
+
+# editors and OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db

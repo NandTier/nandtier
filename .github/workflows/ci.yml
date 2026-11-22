@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    name: Firmware, tests and bitstreams
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache tool downloads
+        uses: actions/cache@v4
+        with:
+          path: setup/cache
+          key: tools-${{ runner.os }}-${{ hashFiles('setup/versions.txt') }}
+
+      - name: Install the tools (setup/setup.sh)
+        run: setup/setup.sh --no-udev --no-test
+
+      - name: Build the boot ROM, launcher and games
+        run: make -j"$(nproc)"
+
+      - name: Run the test suite
+        run: make test
+
+      - name: Build the bitstreams
+        run: |
+          make fpga BOARD=tangnano9k
+          make fpga BOARD=tangnano20k
+
+      - name: Collect the release files
+        run: |
+          mkdir -p dist
+          cp oss/build/tangnano9k/nandtier.fs  dist/nandtier-tangnano9k.fs
+          cp oss/build/tangnano20k/nandtier.fs dist/nandtier-tangnano20k.fs
+          cp fw/fw-flash/build/fw-flash.v      dist/fw-flash.v
+          cp fw/games/build/carts.img          dist/carts.img
+          (cd dist && sha256sum * > SHA256SUMS)
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nandtier-${{ github.sha }}
+          path: dist/
+
+  release:
+    name: Publish the release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build-and-test
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: nandtier-${{ github.sha }}
+          path: dist
+      - name: Create the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/* \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "NandTier $GITHUB_REF_NAME" \
+            --generate-notes
