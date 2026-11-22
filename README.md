@@ -1,4 +1,4 @@
-<p align="center"><img src="docs/images/demo.gif" alt="NandTier on real hardware: the Tang Nano 9K, the game menu on an HDMI screen, and a game played from the PC keyboard" width="100%"></p>
+<p align="center"><img src="docs/images/demo.mp4" alt="NandTier on real hardware: the Tang Nano 9K, the game menu on an HDMI screen, and a game played from the PC keyboard" width="100%"></p>
 <p align="center"><sub>Real hardware: a $25 Tang Nano 9K, an HDMI screen, and the PC keyboard as the controller.</sub></p>
 
 <p align="center">
