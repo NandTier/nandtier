@@ -25,6 +25,7 @@
 # bitstream and where `make program` puts the firmware in the flash.
 #   make test         the test suite in test/
 #   make sim          the whole-SoC simulation in sim/
+#   make site         the documentation website (site/ -> docs/, GitHub Pages)
 #   make clean
 
 NT_HERE := $(dir $(lastword $(MAKEFILE_LIST)))
@@ -49,7 +50,7 @@ SD_MAX_SECTORS ?=
 
 export PYTHON_NAME RISCV_NAME RISCV_PATH
 
-.PHONY: all brom flash games bootram program program-games fpga fpga-load fpga-flash test sim clean
+.PHONY: all brom flash games bootram program program-games fpga fpga-load fpga-flash test sim site clean
 
 all: brom flash games
 
@@ -90,6 +91,9 @@ test:
 
 sim:
 	$(MAKE) -C sim
+
+site:
+	$(PYTHON_NAME) site/build.py
 
 clean:
 	$(MAKE) -C fw/fw-brom clean

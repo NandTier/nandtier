@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NandTier vs PicoRV32, NEORV32, VexRiscv and picotiny | NandTier</title>
+<meta name="description" content="How NandTier compares with other open-source RISC-V cores and SoCs for FPGAs (PicoRV32, NEORV32, VexRiscv and Sipeed picotiny), and when to choose which.">
+<link rel="canonical" href="https://nandtier.github.io/nandtier/compare.html">
+<link rel="icon" href="assets/icon-64.png">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="NandTier">
+<meta property="og:title" content="NandTier vs PicoRV32, NEORV32, VexRiscv and picotiny">
+<meta property="og:description" content="How NandTier compares with other open-source RISC-V cores and SoCs for FPGAs (PicoRV32, NEORV32, VexRiscv and Sipeed picotiny), and when to choose which.">
+<meta property="og:url" content="https://nandtier.github.io/nandtier/compare.html">
+<meta property="og:image" content="https://nandtier.github.io/nandtier/images/banner.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0b1016">
+<link rel="preload" href="assets/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "NandTier", "item": "https://nandtier.github.io/nandtier/"}, {"@type": "ListItem", "position": 2, "name": "Compare", "item": "https://nandtier.github.io/nandtier/compare.html"}]}, {"@context": "https://schema.org", "@type": "TechArticle", "headline": "NandTier vs PicoRV32, NEORV32, VexRiscv and picotiny", "description": "How NandTier compares with other open-source RISC-V cores and SoCs for FPGAs (PicoRV32, NEORV32, VexRiscv and Sipeed picotiny), and when to choose which.", "url": "https://nandtier.github.io/nandtier/compare.html", "dateModified": "2026-11-23", "author": {"@type": "Person", "name": "Abdul Muheet Ghani"}, "isPartOf": {"@type": "WebSite", "name": "NandTier", "url": "https://nandtier.github.io/nandtier/"}}]</script>
+</head>
+<body>
+<header><div class="bar"><a class="brand" href="./"><img src="assets/icon-64.png" alt="" width="30" height="30">NandTier</a>
+<nav aria-label="Documentation"><a href="./">Home</a><a href="getting-started.html">Getting started</a><a href="tang-nano-9k.html">Boards</a><a href="architecture.html">Architecture</a><a href="risc-v-cpu.html">CPU</a><a href="boot-rom-and-flash.html">Boot & flash</a><a href="hdmi-ppu.html">HDMI & PPU</a><a href="games.html">Games</a><a href="open-source-fpga-toolchain.html">Toolchain</a><a href="compare.html" aria-current="page">Compare</a><a href="faq.html">FAQ</a></nav>
+<a class="gh" href="https://github.com/NandTier/nandtier">GitHub</a></div></header>
+<main>
+<h1 id="nandtier-compared"><a class="hl" href="#nandtier-compared">NandTier compared</a></h1>
+<p><strong>NandTier is not the smallest or the fastest RISC-V core. It is a complete, small computer made to be read end to end:</strong> CPU, bus, boot ROM, flash, video, SD card, games and tests, in one repository that builds on a $25 board with open-source tools.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>NandTier</th>
+<th>PicoRV32</th>
+<th>NEORV32</th>
+<th>VexRiscv</th>
+<th>picotiny</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>What it is</td>
+<td>complete SoC + software + games</td>
+<td>CPU core</td>
+<td>microcontroller SoC</td>
+<td>configurable CPU core</td>
+<td>Tang Nano 9K example SoC (PicoRV32)</td>
+</tr>
+<tr>
+<td>Language</td>
+<td>Verilog</td>
+<td>Verilog</td>
+<td>VHDL</td>
+<td>SpinalHDL (generates Verilog)</td>
+<td>Verilog</td>
+</tr>
+<tr>
+<td>Main goal</td>
+<td>teaching the whole stack</td>
+<td>small size</td>
+<td>full-featured MCU</td>
+<td>performance, configurability</td>
+<td>board demo</td>
+</tr>
+<tr>
+<td>HDMI graphics</td>
+<td>tiles, sprites, text</td>
+<td>not included</td>
+<td>not included</td>
+<td>not included</td>
+<td>text terminal</td>
+</tr>
+<tr>
+<td>Games and a game SDK</td>
+<td>8 games, C SDK</td>
+<td>no</td>
+<td>no</td>
+<td>no</td>
+<td>no</td>
+</tr>
+</tbody>
+</table>
+<p>Information about the other projects is from their public repositories; check them for current features.</p>
+<h2 id="when-to-choose-nandtier"><a class="hl" href="#when-to-choose-nandtier">When to choose NandTier</a></h2>
+<ul>
+<li>You want to <strong>teach or learn how a whole computer works</strong>, from reset to a game on screen, in code small enough to read.</li>
+<li>You have a <strong>Tang Nano 9K or 20K</strong>, or a ULX3S, and want HDMI output and storage out of the box.</li>
+<li>You want a <strong>fully open-source flow</strong> and a test suite to build on.</li>
+</ul>
+<h2 id="when-to-choose-something-else"><a class="hl" href="#when-to-choose-something-else">When to choose something else</a></h2>
+<ul>
+<li><strong>Smallest core for your own SoC:</strong> PicoRV32.</li>
+<li><strong>A full-featured microcontroller</strong> with interrupts, many peripherals and documentation in depth: NEORV32.</li>
+<li><strong>Performance, caches, Linux-capable configurations:</strong> VexRiscv.</li>
+</ul>
+<p>NandTier began as a modified copy of Sipeed's picotiny example. Every part of that has since been replaced by new code, under the Apache 2.0 licence.</p>
+<aside class="course"><strong>Learn it step by step.</strong><p><a href="https://www.nandtier.com/">Gates to Games</a> teaches NandTier from the first logic gate to the games, with a voiced film for every lesson.</p></aside>
+<nav class="pager" aria-label="Pages"><a href="open-source-fpga-toolchain.html"><small>Previous</small>Toolchain</a><a href="faq.html"><small>Next</small>FAQ</a></nav>
+</main>
+<footer><div class="bar">NandTier by Abdul Muheet Ghani · <a href="https://github.com/NandTier/nandtier">Source on GitHub</a> · <a href="https://github.com/NandTier/nandtier/blob/main/LICENSE">Apache 2.0</a> · <a href="llms.txt">llms.txt</a></div></footer>
+</body>
+</html>

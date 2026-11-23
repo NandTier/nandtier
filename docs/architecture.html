@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RISC-V SoC architecture · bus and address map | NandTier</title>
+<meta name="description" content="How the NandTier RISC-V system-on-chip is built: one system bus, a four-region address decoder, flash execute-in-place, SRAM, boot RAM, UART, GPIO, SD card, HDMI picture processor and FPGA resource use.">
+<link rel="canonical" href="https://nandtier.github.io/nandtier/architecture.html">
+<link rel="icon" href="assets/icon-64.png">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="NandTier">
+<meta property="og:title" content="RISC-V SoC architecture · bus and address map">
+<meta property="og:description" content="How the NandTier RISC-V system-on-chip is built: one system bus, a four-region address decoder, flash execute-in-place, SRAM, boot RAM, UART, GPIO, SD card, HDMI picture processor and FPGA resource use.">
+<meta property="og:url" content="https://nandtier.github.io/nandtier/architecture.html">
+<meta property="og:image" content="https://nandtier.github.io/nandtier/images/banner.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0b1016">
+<link rel="preload" href="assets/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "NandTier", "item": "https://nandtier.github.io/nandtier/"}, {"@type": "ListItem", "position": 2, "name": "Architecture", "item": "https://nandtier.github.io/nandtier/architecture.html"}]}, {"@context": "https://schema.org", "@type": "TechArticle", "headline": "RISC-V SoC architecture · bus and address map", "description": "How the NandTier RISC-V system-on-chip is built: one system bus, a four-region address decoder, flash execute-in-place, SRAM, boot RAM, UART, GPIO, SD card, HDMI picture processor and FPGA resource use.", "url": "https://nandtier.github.io/nandtier/architecture.html", "dateModified": "2026-11-23", "author": {"@type": "Person", "name": "Abdul Muheet Ghani"}, "isPartOf": {"@type": "WebSite", "name": "NandTier", "url": "https://nandtier.github.io/nandtier/"}}]</script>
+</head>
+<body>
+<header><div class="bar"><a class="brand" href="./"><img src="assets/icon-64.png" alt="" width="30" height="30">NandTier</a>
+<nav aria-label="Documentation"><a href="./">Home</a><a href="getting-started.html">Getting started</a><a href="tang-nano-9k.html">Boards</a><a href="architecture.html" aria-current="page">Architecture</a><a href="risc-v-cpu.html">CPU</a><a href="boot-rom-and-flash.html">Boot & flash</a><a href="hdmi-ppu.html">HDMI & PPU</a><a href="games.html">Games</a><a href="open-source-fpga-toolchain.html">Toolchain</a><a href="compare.html">Compare</a><a href="faq.html">FAQ</a></nav>
+<a class="gh" href="https://github.com/NandTier/nandtier">GitHub</a></div></header>
+<main>
+<h1 id="soc-architecture"><a class="hl" href="#soc-architecture">SoC architecture</a></h1>
+<p><strong>NandTier is one RV32IM CPU on one system bus.</strong> The top bits of every address pick one of four regions (flash, SRAM, on-chip I/O, external devices), and each region decodes further. Software and hardware share one memory map, written in Verilog in <code>hw/nandtier.v</code> and in C in <code>fw/include/nandtier.h</code>.</p>
+<p><img class="wide" src="images/soc-map.png" alt="NandTier SoC block diagram: the CPU on the system bus, flash XIP, SRAM, on-chip I/O (boot RAM, flash config, GPIO, UART) and external devices (SD card, picture processor, logic analyzer)" width="1280" height="720"></p>
+<h2 id="address-map"><a class="hl" href="#address-map">Address map</a></h2>
+<table>
+<thead>
+<tr>
+<th>Address</th>
+<th>Size</th>
+<th>Device</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0x0000_0000</code></td>
+<td>8 MiB</td>
+<td>SPI flash, execute in place, through a 4 KiB read cache</td>
+</tr>
+<tr>
+<td><code>0x4000_0000</code></td>
+<td>8 KiB</td>
+<td>SRAM</td>
+</tr>
+<tr>
+<td><code>0x8000_0000</code></td>
+<td>8 KiB</td>
+<td>boot RAM: the boot ROM and the reset vector</td>
+</tr>
+<tr>
+<td><code>0x8100_0000</code></td>
+<td>4 B</td>
+<td>SPI flash config and bit-bang register</td>
+</tr>
+<tr>
+<td><code>0x8200_0000</code></td>
+<td>12 B</td>
+<td>GPIO</td>
+</tr>
+<tr>
+<td><code>0x8300_0000</code></td>
+<td>8 B</td>
+<td>UART</td>
+</tr>
+<tr>
+<td><code>0xC000_0000</code></td>
+<td>16 B</td>
+<td>SD card SPI port</td>
+</tr>
+<tr>
+<td><code>0xC100_0000</code></td>
+<td>24 KiB</td>
+<td>picture processing unit (PPU)</td>
+</tr>
+<tr>
+<td><code>0xC200_0000</code></td>
+<td>64 B</td>
+<td>on-chip logic analyzer</td>
+</tr>
+</tbody>
+</table>
+<p>Accesses to unmapped addresses complete at once and read 0.</p>
+<h2 id="the-bus-protocol"><a class="hl" href="#the-bus-protocol">The bus protocol</a></h2>
+<p>Every device follows the same simple handshake:</p>
+<ul>
+<li><code>mem_valid</code> stays high until <code>mem_ready</code>, with the address and data held stable.</li>
+<li><code>mem_addr</code> is word aligned; <code>mem_wstrb</code> is zero for reads; <code>mem_instr</code> marks instruction fetches.</li>
+<li>After every transfer, <code>mem_valid</code> is low for at least one cycle.</li>
+</ul>
+<p>A device that needs time simply holds <code>mem_ready</code> low, and the CPU waits. That is how the flash controller, the cache and the UART add wait cycles without any extra logic in the CPU.</p>
+<h2 id="source-layout"><a class="hl" href="#source-layout">Source layout</a></h2>
+<table>
+<thead>
+<tr>
+<th>Folder</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hw/core/</code></td>
+<td>the CPU stages: fetch, decode, execute, ALU, load/store, control</td>
+</tr>
+<tr>
+<td><code>hw/bus/</code></td>
+<td>the address decoder</td>
+</tr>
+<tr>
+<td><code>hw/mem/</code></td>
+<td>boot RAM and SRAM</td>
+</tr>
+<tr>
+<td><code>hw/periph/</code></td>
+<td>UART, GPIO, SPI flash and its cache, SD SPI, logic analyzer, reset</td>
+</tr>
+<tr>
+<td><code>hw/video/</code></td>
+<td>HDMI timing, the PPU, the text terminal, the font, TMDS encoding</td>
+</tr>
+<tr>
+<td><code>boards/</code></td>
+<td>per board: top level, clocks, pins, constraints</td>
+</tr>
+<tr>
+<td><code>fw/</code></td>
+<td>boot ROM, launcher, game SDK and games, in C</td>
+</tr>
+<tr>
+<td><code>sw/</code></td>
+<td>host tools: flash programmer, cartridge packer, keyboard controller</td>
+</tr>
+<tr>
+<td><code>test/</code>, <code>sim/</code></td>
+<td>the test suite and the whole-SoC simulation</td>
+</tr>
+</tbody>
+</table>
+<h2 id="fpga-resources-on-the-tang-nano-9k"><a class="hl" href="#fpga-resources-on-the-tang-nano-9k">FPGA resources on the Tang Nano 9K</a></h2>
+<p>Gowin synthesis and place-and-route of the whole SoC on the GW1NR-9C:</p>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Used</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Logic</td>
+<td>5213 / 8640 (61%)</td>
+</tr>
+<tr>
+<td>Registers</td>
+<td>2527 / 6693 (38%)</td>
+</tr>
+<tr>
+<td>Block RAM</td>
+<td>26 / 26 (100%)</td>
+</tr>
+<tr>
+<td>DSP</td>
+<td>1 MULT36X36</td>
+</tr>
+<tr>
+<td>PLL</td>
+<td>1 / 2</td>
+</tr>
+</tbody>
+</table>
+<h2 id="read-on"><a class="hl" href="#read-on">Read on</a></h2>
+<ul>
+<li><a href="risc-v-cpu.html">The RV32IM CPU core</a></li>
+<li><a href="boot-rom-and-flash.html">Boot ROM and XIP flash</a></li>
+<li><a href="hdmi-ppu.html">HDMI and the picture processor</a></li>
+</ul>
+<aside class="course"><strong>Learn it step by step.</strong><p><a href="https://www.nandtier.com/">Gates to Games</a> teaches NandTier from the first logic gate to the games, with a voiced film for every lesson.</p></aside>
+<nav class="pager" aria-label="Pages"><a href="tang-nano-9k.html"><small>Previous</small>Boards</a><a href="risc-v-cpu.html"><small>Next</small>CPU</a></nav>
+</main>
+<footer><div class="bar">NandTier by Abdul Muheet Ghani · <a href="https://github.com/NandTier/nandtier">Source on GitHub</a> · <a href="https://github.com/NandTier/nandtier/blob/main/LICENSE">Apache 2.0</a> · <a href="llms.txt">llms.txt</a></div></footer>
+</body>
+</html>

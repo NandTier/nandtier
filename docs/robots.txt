@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://nandtier.github.io/nandtier/sitemap.xml

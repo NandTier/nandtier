@@ -1,0 +1,33 @@
+# NandTier
+
+> NandTier is an open-source RISC-V (RV32IM) system-on-chip for the $25 Sipeed Tang Nano 9K FPGA, with HDMI graphics, execute-in-place SPI flash, an SD card and eight games. Built with open-source tools.
+
+NandTier is an open-source (Apache 2.0) RISC-V system-on-chip by Abdul Muheet Ghani. Source: https://github.com/NandTier/nandtier
+
+## Documentation
+
+- [NandTier · an open-source RISC-V computer for the Tang Nano 9K](https://nandtier.github.io/nandtier/): NandTier is an open-source RISC-V (RV32IM) system-on-chip for the $25 Sipeed Tang Nano 9K FPGA, with HDMI graphics, execute-in-place SPI flash, an SD card and eight games. Built with open-source tools.
+- [Getting started with NandTier on the Tang Nano 9K](https://nandtier.github.io/nandtier/getting-started.html): Install the open-source FPGA and RISC-V tools with one script, build NandTier, load it into a Tang Nano 9K, program the flash and SD card, and play the games.
+- [RISC-V on the Tang Nano 9K, 20K and ULX3S](https://nandtier.github.io/nandtier/tang-nano-9k.html): Run a complete RISC-V SoC with HDMI on the Sipeed Tang Nano 9K (Gowin GW1NR-9C), Tang Nano 20K or Radiona ULX3S. Clocks, flash offsets, LEDs, programming with openFPGALoader, and porting to a new board.
+- [RISC-V SoC architecture · bus and address map](https://nandtier.github.io/nandtier/architecture.html): How the NandTier RISC-V system-on-chip is built: one system bus, a four-region address decoder, flash execute-in-place, SRAM, boot RAM, UART, GPIO, SD card, HDMI picture processor and FPGA resource use.
+- [An RV32IM RISC-V CPU core in Verilog](https://nandtier.github.io/nandtier/risc-v-cpu.html): The NandTier CPU is a multi-cycle RV32IM RISC-V core written from scratch in readable Verilog, with hardware multiply and divide, cycle counters and traps. Stages, timing and supported instructions.
+- [RISC-V boot ROM and execute-in-place (XIP) SPI flash on an FPGA](https://nandtier.github.io/nandtier/boot-rom-and-flash.html): How NandTier boots: the reset vector in boot RAM, start.S, a half-second UART window, a command loop that programs the SPI flash, and execute-in-place with a 4 KiB cache. No programmer hardware needed.
+- [HDMI graphics on an FPGA · tiles, sprites and a text terminal](https://nandtier.github.io/nandtier/hdmi-ppu.html): NandTier drives 640x480 HDMI (DVI) from a Gowin FPGA and has an NES-style picture processing unit with a scrolling tile map, 64 sprites, palettes and an 80x25 text terminal, all in Verilog.
+- [Games on a RISC-V FPGA computer · play and write your own](https://nandtier.github.io/nandtier/games.html): Eight games run on NandTier from an SD card cartridge pack, played with the PC keyboard. Write your own in C with the ngame SDK: tiles, sprites, scrolling and a cartridge build in three files.
+- [Open-source FPGA toolchain for Gowin · Yosys, nextpnr, Apicula](https://nandtier.github.io/nandtier/open-source-fpga-toolchain.html): Build a Gowin Tang Nano 9K or 20K bitstream with open-source tools only: Yosys, nextpnr-himbaechel, Apicula gowin_pack and openFPGALoader, plus RISC-V GCC, installed offline-capable by one script.
+- [NandTier vs PicoRV32, NEORV32, VexRiscv and picotiny](https://nandtier.github.io/nandtier/compare.html): How NandTier compares with other open-source RISC-V cores and SoCs for FPGAs (PicoRV32, NEORV32, VexRiscv and Sipeed picotiny), and when to choose which.
+- [NandTier FAQ](https://nandtier.github.io/nandtier/faq.html): Answers about NandTier: which boards it runs on, whether you need the Gowin IDE, what the RISC-V core supports, how much of the FPGA it uses, the licence, and how to write games for it.
+
+## Key facts
+
+- CPU: RV32IM, multi-cycle, 24.975 MHz, no interrupts, no C extension
+- Boards: Sipeed Tang Nano 9K (default), Tang Nano 20K, Radiona ULX3S
+- Memory map: flash XIP 0x00000000 (8 MiB), SRAM 0x40000000 (8 KiB), boot RAM 0x80000000 (8 KiB)
+- Video: 640x480 HDMI, NES-style PPU (256x240, tiles, 64 sprites), 80x25 text terminal
+- Storage: SPI flash with 4 KiB cache, SD card over SPI; boot ROM programs the flash over UART
+- Tools: Yosys, nextpnr, Apicula, openFPGALoader, RISC-V GCC; installer: setup/setup.sh
+- Games: 8 cartridges on the SD card, C game SDK (ngame)
+
+## Course
+
+- [Gates to Games](https://www.nandtier.com/): a course that teaches NandTier from logic gates to games.

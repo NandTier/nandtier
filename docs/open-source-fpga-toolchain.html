@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Open-source FPGA toolchain for Gowin · Yosys, nextpnr, Apicula | NandTier</title>
+<meta name="description" content="Build a Gowin Tang Nano 9K or 20K bitstream with open-source tools only: Yosys, nextpnr-himbaechel, Apicula gowin_pack and openFPGALoader, plus RISC-V GCC, installed offline-capable by one script.">
+<link rel="canonical" href="https://nandtier.github.io/nandtier/open-source-fpga-toolchain.html">
+<link rel="icon" href="assets/icon-64.png">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="NandTier">
+<meta property="og:title" content="Open-source FPGA toolchain for Gowin · Yosys, nextpnr, Apicula">
+<meta property="og:description" content="Build a Gowin Tang Nano 9K or 20K bitstream with open-source tools only: Yosys, nextpnr-himbaechel, Apicula gowin_pack and openFPGALoader, plus RISC-V GCC, installed offline-capable by one script.">
+<meta property="og:url" content="https://nandtier.github.io/nandtier/open-source-fpga-toolchain.html">
+<meta property="og:image" content="https://nandtier.github.io/nandtier/images/banner.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0b1016">
+<link rel="preload" href="assets/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "NandTier", "item": "https://nandtier.github.io/nandtier/"}, {"@type": "ListItem", "position": 2, "name": "Toolchain", "item": "https://nandtier.github.io/nandtier/open-source-fpga-toolchain.html"}]}, {"@context": "https://schema.org", "@type": "TechArticle", "headline": "Open-source FPGA toolchain for Gowin · Yosys, nextpnr, Apicula", "description": "Build a Gowin Tang Nano 9K or 20K bitstream with open-source tools only: Yosys, nextpnr-himbaechel, Apicula gowin_pack and openFPGALoader, plus RISC-V GCC, installed offline-capable by one script.", "url": "https://nandtier.github.io/nandtier/open-source-fpga-toolchain.html", "dateModified": "2026-11-23", "author": {"@type": "Person", "name": "Abdul Muheet Ghani"}, "isPartOf": {"@type": "WebSite", "name": "NandTier", "url": "https://nandtier.github.io/nandtier/"}}]</script>
+</head>
+<body>
+<header><div class="bar"><a class="brand" href="./"><img src="assets/icon-64.png" alt="" width="30" height="30">NandTier</a>
+<nav aria-label="Documentation"><a href="./">Home</a><a href="getting-started.html">Getting started</a><a href="tang-nano-9k.html">Boards</a><a href="architecture.html">Architecture</a><a href="risc-v-cpu.html">CPU</a><a href="boot-rom-and-flash.html">Boot & flash</a><a href="hdmi-ppu.html">HDMI & PPU</a><a href="games.html">Games</a><a href="open-source-fpga-toolchain.html" aria-current="page">Toolchain</a><a href="compare.html">Compare</a><a href="faq.html">FAQ</a></nav>
+<a class="gh" href="https://github.com/NandTier/nandtier">GitHub</a></div></header>
+<main>
+<h1 id="open-source-fpga-toolchain"><a class="hl" href="#open-source-fpga-toolchain">Open-source FPGA toolchain</a></h1>
+<p><strong>Every NandTier bitstream is built with open-source tools only: no vendor IDE, no licence.</strong> One script installs them, and <code>make fpga</code> runs the whole flow in about a minute and a half.</p>
+<h2 id="the-flow"><a class="hl" href="#the-flow">The flow</a></h2>
+<table>
+<thead>
+<tr>
+<th>Board</th>
+<th>Synthesis</th>
+<th>Place and route</th>
+<th>Bitstream</th>
+<th>Programming</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tang Nano 9K / 20K (Gowin)</td>
+<td>Yosys</td>
+<td>nextpnr-himbaechel</td>
+<td>Apicula <code>gowin_pack</code></td>
+<td>openFPGALoader</td>
+</tr>
+<tr>
+<td>ULX3S (Lattice ECP5)</td>
+<td>Yosys</td>
+<td>nextpnr-ecp5</td>
+<td>Trellis <code>ecppack</code></td>
+<td>openFPGALoader</td>
+</tr>
+</tbody>
+</table>
+<p>The open flow reads none of the Gowin files. <code>boards/common/nt_rams.v</code> replaces the Gowin RAM IP with portable Verilog, and the boot RAM loads the boot ROM straight from the firmware build at synthesis.</p>
+<h2 id="one-step-install"><a class="hl" href="#one-step-install">One-step install</a></h2>
+<pre><code class="language-bash">setup/setup.sh            # Linux, macOS, WSL
+setup\setup.bat           # Windows
+</code></pre>
+<p>It installs the YosysHQ OSS CAD Suite, the xPack RISC-V GCC and pyserial into <code>tools/</code>, writes <code>local.mk</code> so plain <code>make</code> finds them, and checks everything by building the firmware. Versions are pinned, archives are checked by SHA-256 where published, and running it again only adds what is missing. Uninstall by deleting <code>tools/</code> and <code>local.mk</code>.</p>
+<h2 id="for-a-classroom-without-internet"><a class="hl" href="#for-a-classroom-without-internet">For a classroom without internet</a></h2>
+<pre><code class="language-bash">setup/setup.sh --bundle                       # this OS
+setup/setup.sh --bundle --platform win32-x64  # for Windows PCs
+setup/setup.sh --offline                      # on each lab machine
+</code></pre>
+<h2 id="checking-the-open-flow"><a class="hl" href="#checking-the-open-flow">Checking the open flow</a></h2>
+<p><code>make -C oss gatesim BOARD=tangnano9k</code> simulates the synthesised netlist with Gowin's own primitive models: it pings the boot ROM over the UART, programs a flash page and measures the HDMI clock. The Gowin IDE flow in <code>project/</code> is still there for comparison.</p>
+<h2 id="continuous-integration"><a class="hl" href="#continuous-integration">Continuous integration</a></h2>
+<p>Every push to the NandTier repository installs the tools with the same script, builds the firmware, runs the test suite and builds the Tang Nano 9K and 20K bitstreams on GitHub Actions. Tagged versions publish the bitstreams as a release.</p>
+<aside class="course"><strong>Learn it step by step.</strong><p><a href="https://www.nandtier.com/">Gates to Games</a> teaches NandTier from the first logic gate to the games, with a voiced film for every lesson.</p></aside>
+<nav class="pager" aria-label="Pages"><a href="games.html"><small>Previous</small>Games</a><a href="compare.html"><small>Next</small>Compare</a></nav>
+</main>
+<footer><div class="bar">NandTier by Abdul Muheet Ghani · <a href="https://github.com/NandTier/nandtier">Source on GitHub</a> · <a href="https://github.com/NandTier/nandtier/blob/main/LICENSE">Apache 2.0</a> · <a href="llms.txt">llms.txt</a></div></footer>
+</body>
+</html>

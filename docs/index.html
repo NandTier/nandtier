@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NandTier · an open-source RISC-V computer for the Tang Nano 9K</title>
+<meta name="description" content="NandTier is an open-source RISC-V (RV32IM) system-on-chip for the $25 Sipeed Tang Nano 9K FPGA, with HDMI graphics, execute-in-place SPI flash, an SD card and eight games. Built with open-source tools.">
+<link rel="canonical" href="https://nandtier.github.io/nandtier/">
+<link rel="icon" href="assets/icon-64.png">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NandTier">
+<meta property="og:title" content="NandTier · an open-source RISC-V computer for the Tang Nano 9K">
+<meta property="og:description" content="NandTier is an open-source RISC-V (RV32IM) system-on-chip for the $25 Sipeed Tang Nano 9K FPGA, with HDMI graphics, execute-in-place SPI flash, an SD card and eight games. Built with open-source tools.">
+<meta property="og:url" content="https://nandtier.github.io/nandtier/">
+<meta property="og:image" content="https://nandtier.github.io/nandtier/images/banner.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0b1016">
+<link rel="preload" href="assets/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "NandTier", "item": "https://nandtier.github.io/nandtier/"}]}, {"@context": "https://schema.org", "@type": "SoftwareSourceCode", "name": "NandTier", "description": "NandTier is an open-source RISC-V (RV32IM) system-on-chip for the $25 Sipeed Tang Nano 9K FPGA, with HDMI graphics, execute-in-place SPI flash, an SD card and eight games. Built with open-source tools.", "url": "https://nandtier.github.io/nandtier/", "codeRepository": "https://github.com/NandTier/nandtier", "programmingLanguage": ["Verilog", "C", "Python", "RISC-V assembly"], "license": "https://www.apache.org/licenses/LICENSE-2.0", "author": {"@type": "Person", "name": "Abdul Muheet Ghani"}, "keywords": "RISC-V, RV32IM, FPGA, Tang Nano 9K, Gowin, SoC, HDMI, Verilog, open-source toolchain"}]</script>
+</head>
+<body>
+<header><div class="bar"><a class="brand" href="./"><img src="assets/icon-64.png" alt="" width="30" height="30">NandTier</a>
+<nav aria-label="Documentation"><a href="./" aria-current="page">Home</a><a href="getting-started.html">Getting started</a><a href="tang-nano-9k.html">Boards</a><a href="architecture.html">Architecture</a><a href="risc-v-cpu.html">CPU</a><a href="boot-rom-and-flash.html">Boot & flash</a><a href="hdmi-ppu.html">HDMI & PPU</a><a href="games.html">Games</a><a href="open-source-fpga-toolchain.html">Toolchain</a><a href="compare.html">Compare</a><a href="faq.html">FAQ</a></nav>
+<a class="gh" href="https://github.com/NandTier/nandtier">GitHub</a></div></header>
+<main>
+<div class="hero">
+<p class="kicker">RISC-V · FPGA · OPEN SOURCE</p>
+<h1>A RISC-V computer you can read, build and play</h1>
+<p class="lead"><strong>NandTier is an open-source RISC-V system-on-chip for small FPGA boards.</strong> It has its own RV32IM CPU, a boot ROM, execute-in-place SPI flash, an HDMI picture processor, an SD card and eight games, and it fits on a $25 Sipeed Tang Nano 9K. Everything is written in readable Verilog and C, and builds with open-source tools from one <code>make</code>.</p>
+<p class="cta"><a class="btn" href="getting-started.html">Get started</a> <a class="btn ghost" href="https://github.com/NandTier/nandtier">View on GitHub</a></p>
+</div>
+
+<div class="pair"><img src="images/menu.gif" alt="The NandTier game menu on an HDMI screen" width="512" height="480"><img src="images/invaders.gif" alt="Alien Raid, one of the eight NandTier games" width="512" height="480"></div>
+
+<h2 id="what-nandtier-is"><a class="hl" href="#what-nandtier-is">What NandTier is</a></h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CPU</strong></td>
+<td>RV32IM, multi-cycle, written from scratch: hardware multiply and divide, cycle and instruction counters</td>
+</tr>
+<tr>
+<td><strong>Memory</strong></td>
+<td>8 MiB SPI flash, execute in place, with a 4 KiB read cache; 8 KiB SRAM; 8 KiB boot RAM</td>
+</tr>
+<tr>
+<td><strong>Video</strong></td>
+<td>640x480 HDMI (DVI), an NES-style picture processing unit (tiles, sprites, scrolling) and an 80x25 text terminal</td>
+</tr>
+<tr>
+<td><strong>I/O</strong></td>
+<td>UART at 115200 baud, GPIO with 6 LEDs, SD card over SPI, an on-chip logic analyzer</td>
+</tr>
+<tr>
+<td><strong>Boards</strong></td>
+<td>Sipeed Tang Nano 9K (Gowin GW1NR-9C), Sipeed Tang Nano 20K (GW2AR-18C), Radiona ULX3S (Lattice ECP5)</td>
+</tr>
+<tr>
+<td><strong>Tools</strong></td>
+<td>Yosys, nextpnr, Apicula, openFPGALoader, Icarus Verilog, RISC-V GCC: all open source, installed by one script</td>
+</tr>
+<tr>
+<td><strong>License</strong></td>
+<td>Apache 2.0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="who-it-is-for"><a class="hl" href="#who-it-is-for">Who it is for</a></h2>
+<ul>
+<li><strong>Students</strong> who built a single-cycle RISC-V core and want to know what comes next: a bus, a boot ROM, flash, video, and software that runs on it.</li>
+<li><strong>Teachers</strong> who need a complete, tested system that runs on a cheap board, with an offline installer for a whole lab.</li>
+<li><strong>Makers</strong> who want to write their own games for their own computer.</li>
+</ul>
+<h2 id="read-the-documentation"><a class="hl" href="#read-the-documentation">Read the documentation</a></h2>
+<ul>
+<li><a href="getting-started.html">Getting started</a>: install the tools, build, load the board, play.</li>
+<li><a href="tang-nano-9k.html">RISC-V on the Tang Nano 9K</a>: boards, pins, clocks and programming.</li>
+<li><a href="architecture.html">SoC architecture</a>: the bus, the address map and the FPGA resources.</li>
+<li><a href="risc-v-cpu.html">The RV32IM CPU core</a>: stages, timing and what is supported.</li>
+<li><a href="boot-rom-and-flash.html">Boot ROM and XIP flash</a>: from reset to your own firmware in the flash.</li>
+<li><a href="hdmi-ppu.html">HDMI and the picture processor</a>: tiles, sprites and the text terminal.</li>
+<li><a href="games.html">Games and the game SDK</a>: play the eight games, or write your own.</li>
+<li><a href="open-source-fpga-toolchain.html">Open-source FPGA toolchain</a>: Yosys, nextpnr and Apicula for Gowin FPGAs.</li>
+<li><a href="compare.html">Comparison</a> with PicoRV32, NEORV32, VexRiscv and picotiny.</li>
+<li><a href="faq.html">FAQ</a></li>
+</ul>
+<aside class="course"><strong>Learn it step by step.</strong><p><a href="https://www.nandtier.com/">Gates to Games</a> teaches NandTier from the first logic gate to the games, with a voiced film for every lesson.</p></aside>
+<nav class="pager" aria-label="Pages"><span></span><a href="getting-started.html"><small>Next</small>Getting started</a></nav>
+</main>
+<footer><div class="bar">NandTier by Abdul Muheet Ghani · <a href="https://github.com/NandTier/nandtier">Source on GitHub</a> · <a href="https://github.com/NandTier/nandtier/blob/main/LICENSE">Apache 2.0</a> · <a href="llms.txt">llms.txt</a></div></footer>
+</body>
+</html>

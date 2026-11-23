@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NandTier FAQ | NandTier</title>
+<meta name="description" content="Answers about NandTier: which boards it runs on, whether you need the Gowin IDE, what the RISC-V core supports, how much of the FPGA it uses, the licence, and how to write games for it.">
+<link rel="canonical" href="https://nandtier.github.io/nandtier/faq.html">
+<link rel="icon" href="assets/icon-64.png">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="NandTier">
+<meta property="og:title" content="NandTier FAQ">
+<meta property="og:description" content="Answers about NandTier: which boards it runs on, whether you need the Gowin IDE, what the RISC-V core supports, how much of the FPGA it uses, the licence, and how to write games for it.">
+<meta property="og:url" content="https://nandtier.github.io/nandtier/faq.html">
+<meta property="og:image" content="https://nandtier.github.io/nandtier/images/banner.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0b1016">
+<link rel="preload" href="assets/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "NandTier", "item": "https://nandtier.github.io/nandtier/"}, {"@type": "ListItem", "position": 2, "name": "FAQ", "item": "https://nandtier.github.io/nandtier/faq.html"}]}, {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is NandTier?", "acceptedAnswer": {"@type": "Answer", "text": "NandTier is an open-source RISC-V system-on-chip for small FPGA boards. It has an RV32IM CPU, a boot ROM, execute-in-place SPI flash, HDMI graphics, an SD card, and eight games, and it runs on the $25 Sipeed Tang Nano 9K."}}, {"@type": "Question", "name": "Which boards does it run on?", "acceptedAnswer": {"@type": "Answer", "text": "The Sipeed Tang Nano 9K (Gowin GW1NR-9C), the Sipeed Tang Nano 20K (Gowin GW2AR-18C) and the Radiona ULX3S (Lattice ECP5). See Boards."}}, {"@type": "Question", "name": "Do I need the Gowin IDE?", "acceptedAnswer": {"@type": "Answer", "text": "No. The bitstreams build with Yosys, nextpnr and Apicula. The Gowin IDE project is included as an alternative, and the whole-SoC simulation uses Gowin's primitive library."}}, {"@type": "Question", "name": "Does it work on Windows?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. setup\\setup.bat installs the tools on Windows, and macOS, Linux and WSL use setup/setup.sh."}}, {"@type": "Question", "name": "Which RISC-V instructions does the CPU support?", "acceptedAnswer": {"@type": "Answer", "text": "RV32I and the M extension (multiply and divide), FENCE as a no-op, and the cycle, time and instret counters. It has no interrupts and no compressed (C) instructions. See the CPU."}}, {"@type": "Question", "name": "How fast is it?", "acceptedAnswer": {"@type": "Answer", "text": "The CPU runs at 24.975 MHz. Most instructions take 4 cycles and loads and stores 7, plus wait cycles for slow memory. Code in the 4 KiB flash cache runs at full speed."}}, {"@type": "Question", "name": "How much of the Tang Nano 9K does it use?", "acceptedAnswer": {"@type": "Answer", "text": "About 61% of the logic, 38% of the registers and all 26 block RAMs, in the Gowin build."}}, {"@type": "Question", "name": "How do I put my own program on the board?", "acceptedAnswer": {"@type": "Answer", "text": "Write it in C, link it for flash address 0 like fw/fw-flash, and run make program PROG_FILE=<your file>.v. The boot ROM writes it into the flash over the USB cable. See Boot ROM and XIP flash."}}, {"@type": "Question", "name": "Can I write my own games?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. A game is three files: a Makefile, an art.py with the pixels, and the C code using the ngame library. See Games."}}, {"@type": "Question", "name": "Does it have sound?", "acceptedAnswer": {"@type": "Answer", "text": "Not yet. Audio output is one of the open ideas for contributors."}}, {"@type": "Question", "name": "What licence is it under?", "acceptedAnswer": {"@type": "Answer", "text": "Apache 2.0. Generated Gowin IP files are under Gowin's own terms; the NOTICE file lists them."}}, {"@type": "Question", "name": "Is there a course?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Gates to Games teaches NandTier from the first logic gate to the games, with a voiced film for every lesson. It is free at nandtier.com."}}, {"@type": "Question", "name": "How can I help?", "acceptedAnswer": {"@type": "Answer", "text": "Report bugs, port it to a new board, add a game or a test. Read CONTRIBUTING.md and ask in Discussions."}}]}]</script>
+</head>
+<body>
+<header><div class="bar"><a class="brand" href="./"><img src="assets/icon-64.png" alt="" width="30" height="30">NandTier</a>
+<nav aria-label="Documentation"><a href="./">Home</a><a href="getting-started.html">Getting started</a><a href="tang-nano-9k.html">Boards</a><a href="architecture.html">Architecture</a><a href="risc-v-cpu.html">CPU</a><a href="boot-rom-and-flash.html">Boot & flash</a><a href="hdmi-ppu.html">HDMI & PPU</a><a href="games.html">Games</a><a href="open-source-fpga-toolchain.html">Toolchain</a><a href="compare.html">Compare</a><a href="faq.html" aria-current="page">FAQ</a></nav>
+<a class="gh" href="https://github.com/NandTier/nandtier">GitHub</a></div></header>
+<main>
+<h1 id="frequently-asked-questions"><a class="hl" href="#frequently-asked-questions">Frequently asked questions</a></h1>
+<h3 id="what-is-nandtier"><a class="hl" href="#what-is-nandtier">What is NandTier?</a></h3>
+<p>NandTier is an open-source RISC-V system-on-chip for small FPGA boards. It has an RV32IM CPU, a boot ROM, execute-in-place SPI flash, HDMI graphics, an SD card, and eight games, and it runs on the $25 Sipeed Tang Nano 9K.</p>
+<h3 id="which-boards-does-it-run-on"><a class="hl" href="#which-boards-does-it-run-on">Which boards does it run on?</a></h3>
+<p>The Sipeed Tang Nano 9K (Gowin GW1NR-9C), the Sipeed Tang Nano 20K (Gowin GW2AR-18C) and the Radiona ULX3S (Lattice ECP5). See <a href="tang-nano-9k.html">Boards</a>.</p>
+<h3 id="do-i-need-the-gowin-ide"><a class="hl" href="#do-i-need-the-gowin-ide">Do I need the Gowin IDE?</a></h3>
+<p>No. The bitstreams build with Yosys, nextpnr and Apicula. The Gowin IDE project is included as an alternative, and the whole-SoC simulation uses Gowin's primitive library.</p>
+<h3 id="does-it-work-on-windows"><a class="hl" href="#does-it-work-on-windows">Does it work on Windows?</a></h3>
+<p>Yes. <code>setup\setup.bat</code> installs the tools on Windows, and macOS, Linux and WSL use <code>setup/setup.sh</code>.</p>
+<h3 id="which-risc-v-instructions-does-the-cpu-support"><a class="hl" href="#which-risc-v-instructions-does-the-cpu-support">Which RISC-V instructions does the CPU support?</a></h3>
+<p>RV32I and the M extension (multiply and divide), FENCE as a no-op, and the cycle, time and instret counters. It has no interrupts and no compressed (C) instructions. See <a href="risc-v-cpu.html">the CPU</a>.</p>
+<h3 id="how-fast-is-it"><a class="hl" href="#how-fast-is-it">How fast is it?</a></h3>
+<p>The CPU runs at 24.975 MHz. Most instructions take 4 cycles and loads and stores 7, plus wait cycles for slow memory. Code in the 4 KiB flash cache runs at full speed.</p>
+<h3 id="how-much-of-the-tang-nano-9k-does-it-use"><a class="hl" href="#how-much-of-the-tang-nano-9k-does-it-use">How much of the Tang Nano 9K does it use?</a></h3>
+<p>About 61% of the logic, 38% of the registers and all 26 block RAMs, in the Gowin build.</p>
+<h3 id="how-do-i-put-my-own-program-on-the-board"><a class="hl" href="#how-do-i-put-my-own-program-on-the-board">How do I put my own program on the board?</a></h3>
+<p>Write it in C, link it for flash address 0 like <code>fw/fw-flash</code>, and run <code>make program PROG_FILE=&lt;your file&gt;.v</code>. The boot ROM writes it into the flash over the USB cable. See <a href="boot-rom-and-flash.html">Boot ROM and XIP flash</a>.</p>
+<h3 id="can-i-write-my-own-games"><a class="hl" href="#can-i-write-my-own-games">Can I write my own games?</a></h3>
+<p>Yes. A game is three files: a Makefile, an <code>art.py</code> with the pixels, and the C code using the <code>ngame</code> library. See <a href="games.html">Games</a>.</p>
+<h3 id="does-it-have-sound"><a class="hl" href="#does-it-have-sound">Does it have sound?</a></h3>
+<p>Not yet. Audio output is one of the open ideas for contributors.</p>
+<h3 id="what-licence-is-it-under"><a class="hl" href="#what-licence-is-it-under">What licence is it under?</a></h3>
+<p>Apache 2.0. Generated Gowin IP files are under Gowin's own terms; the <code>NOTICE</code> file lists them.</p>
+<h3 id="is-there-a-course"><a class="hl" href="#is-there-a-course">Is there a course?</a></h3>
+<p>Yes. <strong>Gates to Games</strong> teaches NandTier from the first logic gate to the games, with a voiced film for every lesson. It is free at <a href="https://www.nandtier.com/">nandtier.com</a>.</p>
+<h3 id="how-can-i-help"><a class="hl" href="#how-can-i-help">How can I help?</a></h3>
+<p>Report bugs, port it to a new board, add a game or a test. Read <a href="https://github.com/NandTier/nandtier/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a> and ask in <a href="https://github.com/NandTier/nandtier/discussions">Discussions</a>.</p>
+
+<nav class="pager" aria-label="Pages"><a href="compare.html"><small>Previous</small>Compare</a></nav>
+</main>
+<footer><div class="bar">NandTier by Abdul Muheet Ghani · <a href="https://github.com/NandTier/nandtier">Source on GitHub</a> · <a href="https://github.com/NandTier/nandtier/blob/main/LICENSE">Apache 2.0</a> · <a href="llms.txt">llms.txt</a></div></footer>
+</body>
+</html>

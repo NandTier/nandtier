@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RISC-V on the Tang Nano 9K, 20K and ULX3S | NandTier</title>
+<meta name="description" content="Run a complete RISC-V SoC with HDMI on the Sipeed Tang Nano 9K (Gowin GW1NR-9C), Tang Nano 20K or Radiona ULX3S. Clocks, flash offsets, LEDs, programming with openFPGALoader, and porting to a new board.">
+<link rel="canonical" href="https://nandtier.github.io/nandtier/tang-nano-9k.html">
+<link rel="icon" href="assets/icon-64.png">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="NandTier">
+<meta property="og:title" content="RISC-V on the Tang Nano 9K, 20K and ULX3S">
+<meta property="og:description" content="Run a complete RISC-V SoC with HDMI on the Sipeed Tang Nano 9K (Gowin GW1NR-9C), Tang Nano 20K or Radiona ULX3S. Clocks, flash offsets, LEDs, programming with openFPGALoader, and porting to a new board.">
+<meta property="og:url" content="https://nandtier.github.io/nandtier/tang-nano-9k.html">
+<meta property="og:image" content="https://nandtier.github.io/nandtier/images/banner.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0b1016">
+<link rel="preload" href="assets/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "NandTier", "item": "https://nandtier.github.io/nandtier/"}, {"@type": "ListItem", "position": 2, "name": "Boards", "item": "https://nandtier.github.io/nandtier/tang-nano-9k.html"}]}, {"@context": "https://schema.org", "@type": "TechArticle", "headline": "RISC-V on the Tang Nano 9K, 20K and ULX3S", "description": "Run a complete RISC-V SoC with HDMI on the Sipeed Tang Nano 9K (Gowin GW1NR-9C), Tang Nano 20K or Radiona ULX3S. Clocks, flash offsets, LEDs, programming with openFPGALoader, and porting to a new board.", "url": "https://nandtier.github.io/nandtier/tang-nano-9k.html", "dateModified": "2026-11-23", "author": {"@type": "Person", "name": "Abdul Muheet Ghani"}, "isPartOf": {"@type": "WebSite", "name": "NandTier", "url": "https://nandtier.github.io/nandtier/"}}]</script>
+</head>
+<body>
+<header><div class="bar"><a class="brand" href="./"><img src="assets/icon-64.png" alt="" width="30" height="30">NandTier</a>
+<nav aria-label="Documentation"><a href="./">Home</a><a href="getting-started.html">Getting started</a><a href="tang-nano-9k.html" aria-current="page">Boards</a><a href="architecture.html">Architecture</a><a href="risc-v-cpu.html">CPU</a><a href="boot-rom-and-flash.html">Boot & flash</a><a href="hdmi-ppu.html">HDMI & PPU</a><a href="games.html">Games</a><a href="open-source-fpga-toolchain.html">Toolchain</a><a href="compare.html">Compare</a><a href="faq.html">FAQ</a></nav>
+<a class="gh" href="https://github.com/NandTier/nandtier">GitHub</a></div></header>
+<main>
+<h1 id="risc-v-on-the-tang-nano-9k-20k-and-ulx3s"><a class="hl" href="#risc-v-on-the-tang-nano-9k-20k-and-ulx3s">RISC-V on the Tang Nano 9K, 20K and ULX3S</a></h1>
+<p><strong>NandTier runs on three FPGA boards: the Sipeed Tang Nano 9K (the default), the Sipeed Tang Nano 20K and the Radiona ULX3S.</strong> The boot ROM, the launcher, the games and the SD card pack are the same on all of them; only the bitstream differs.</p>
+<table>
+<thead>
+<tr>
+<th>Board</th>
+<th>FPGA</th>
+<th>Clock in</th>
+<th>HDMI</th>
+<th>Firmware in flash at</th>
+<th><code>BOARD=</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sipeed Tang Nano 9K</td>
+<td>Gowin GW1NR-9C</td>
+<td>27 MHz</td>
+<td>emulated LVDS</td>
+<td><code>0x000000</code></td>
+<td><code>tangnano9k</code></td>
+</tr>
+<tr>
+<td>Sipeed Tang Nano 20K</td>
+<td>Gowin GW2AR-18C</td>
+<td>27 MHz</td>
+<td>true LVDS</td>
+<td><code>0x100000</code></td>
+<td><code>tangnano20k</code></td>
+</tr>
+<tr>
+<td>Radiona ULX3S</td>
+<td>Lattice ECP5</td>
+<td>25 MHz</td>
+<td>GPDI</td>
+<td><code>0x200000</code></td>
+<td><code>ulx3s</code></td>
+</tr>
+</tbody>
+</table>
+<p>On the Tang Nano 9K the bitstream lives inside the FPGA, so the whole SPI flash belongs to the firmware. On the other boards the bitstream sits at the start of the flash, and the hardware maps CPU address 0 to the flash from <code>FLASH_OFFSET</code> on, so the same firmware runs everywhere.</p>
+<h2 id="why-the-tang-nano-9k"><a class="hl" href="#why-the-tang-nano-9k">Why the Tang Nano 9K</a></h2>
+<p>It costs about $25, has an HDMI connector, a USB-C port that carries both JTAG and a UART, a microSD slot, 6 LEDs and an SPI flash, and its Gowin GW1NR-9C is supported by the open-source Apicula project. That is everything a small computer needs.</p>
+<h2 id="clocks"><a class="hl" href="#clocks">Clocks</a></h2>
+<pre><code class="language-text">27 MHz crystal -&gt; rPLL 124.875 MHz (HDMI bit clock / 2) -&gt; CLKDIV /5 -&gt; 24.975 MHz
+</code></pre>
+<p>The 24.975 MHz clock drives the CPU, the bus and the 640x480 pixel output at 59.46 Hz.</p>
+<h2 id="build-and-program-for-each-board"><a class="hl" href="#build-and-program-for-each-board">Build and program for each board</a></h2>
+<pre><code class="language-bash">make fpga BOARD=tangnano20k          # oss/build/tangnano20k/nandtier.fs
+make fpga-load BOARD=tangnano20k     # into the FPGA, gone at power-off
+make fpga-flash BOARD=tangnano20k    # into the configuration flash
+make program BOARD=tangnano20k COMx=/dev/ttyUSB1
+</code></pre>
+<p><code>fpga-flash</code> writes only the bitstream, so the launcher and the games stored above it stay.</p>
+<h2 id="leds-buttons-and-the-uart"><a class="hl" href="#leds-buttons-and-the-uart">LEDs, buttons and the UART</a></h2>
+<ul>
+<li><strong>LEDs:</strong> GPIO pins 0-5 drive LEDs 1-6. They are active low: write 0 to light one.</li>
+<li><strong>Reset:</strong> button S1. After reset the boot ROM listens on the UART for half a second, then starts the firmware.</li>
+<li><strong>UART:</strong> 115200 baud over the same USB-C cable. On Windows, install the WinUSB driver on interface 0 (JTAG) with Zadig and leave interface 1, the UART, alone.</li>
+</ul>
+<h2 id="port-nandtier-to-another-board"><a class="hl" href="#port-nandtier-to-another-board">Port NandTier to another board</a></h2>
+<p>Copy the closest <code>boards/&lt;board&gt;/</code> and change the PLL (about 25 MHz for the system and 5x for HDMI), the reset polarity and the pins, and set <code>FLASH_OFFSET</code> above the end of the bitstream on a 1 MiB boundary. Then add the board to <code>BOARDS</code> in <code>oss/Makefile</code>. Ports are welcome as <a href="https://github.com/NandTier/nandtier/blob/main/CONTRIBUTING.md">pull requests</a>.</p>
+<aside class="course"><strong>Learn it step by step.</strong><p><a href="https://www.nandtier.com/">Gates to Games</a> teaches NandTier from the first logic gate to the games, with a voiced film for every lesson.</p></aside>
+<nav class="pager" aria-label="Pages"><a href="getting-started.html"><small>Previous</small>Getting started</a><a href="architecture.html"><small>Next</small>Architecture</a></nav>
+</main>
+<footer><div class="bar">NandTier by Abdul Muheet Ghani · <a href="https://github.com/NandTier/nandtier">Source on GitHub</a> · <a href="https://github.com/NandTier/nandtier/blob/main/LICENSE">Apache 2.0</a> · <a href="llms.txt">llms.txt</a></div></footer>
+</body>
+</html>
