@@ -17,6 +17,8 @@ https://github.com/user-attachments/assets/dc88310b-766f-451b-ac10-a833564b3444
 
 It runs on the Sipeed Tang Nano 9K (Gowin GW1NR-9C, about $25), the Sipeed Tang Nano 20K (Gowin GW2AR-18C) and the Radiona ULX3S (Lattice ECP5).
 
+**Website and course:** [www.nandtier.com](https://www.nandtier.com) · **Docs:** [nandtier.github.io/nandtier](https://nandtier.github.io/nandtier/) · **Contact:** [nandtier.project@gmail.com](mailto:nandtier.project@gmail.com)
+
 <p align="center"><img src="docs/images/menu.gif" alt="The NandTier game menu on HDMI" width="45%"> &nbsp; <img src="docs/images/invaders.gif" alt="Alien Raid running on NandTier" width="45%"></p>
 
 - **CPU:** RV32IM, with hardware multiply and divide, written from scratch in readable Verilog.
@@ -634,6 +636,14 @@ The firmware run takes several minutes. To keep it shorter, the testbench speeds
 Bug reports, new games, ports to other boards and fixes are all welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) first: it explains how to run the tests and what a good pull request looks like. Issues labelled [`good first issue`](https://github.com/NandTier/nandtier/labels/good%20first%20issue) are a gentle way in. Everyone taking part follows the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 If NandTier helps you learn or teach, a star helps other people find it.
+
+## Contact
+
+- Website and the Gates to Games course: [www.nandtier.com](https://www.nandtier.com)
+- Documentation: [nandtier.github.io/nandtier](https://nandtier.github.io/nandtier/)
+- Email: [nandtier.project@gmail.com](mailto:nandtier.project@gmail.com)
+- Questions and ideas: [GitHub Discussions](https://github.com/NandTier/nandtier/discussions)
+- Bugs: [GitHub Issues](https://github.com/NandTier/nandtier/issues)
 
 ## License
 
