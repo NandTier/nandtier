@@ -11,9 +11,9 @@ https://github.com/user-attachments/assets/dc88310b-766f-451b-ac10-a833564b3444
   <img src="https://img.shields.io/badge/toolchain-100%25%20open%20source-3fd08a.svg" alt="Open-source toolchain">
 </p>
 
-# NandTier
+# NandTier: an open-source RISC-V SoC on FPGA, with games
 
-**A complete RISC-V computer for small FPGA boards, small enough to read in a weekend.** It has its own CPU, a boot ROM, execute-in-place flash, an HDMI picture processor, an SD card, and eight games, built with open-source tools from one `make`.
+**A complete RISC-V computer (RV32IM SoC) in Verilog for small FPGA boards, small enough to read in a weekend.** It has its own CPU, a boot ROM, execute-in-place flash, an HDMI picture processor, an SD card, and eight games, built with open-source tools from one `make`.
 
 It runs on the Sipeed Tang Nano 9K (Gowin GW1NR-9C, about $25), the Sipeed Tang Nano 20K (Gowin GW2AR-18C) and the Radiona ULX3S (Lattice ECP5).
 
@@ -31,6 +31,37 @@ It runs on the Sipeed Tang Nano 9K (Gowin GW1NR-9C, about $25), the Sipeed Tang 
 
 All NandTier sources are licensed under the [Apache License 2.0](LICENSE). See [NOTICE](NOTICE) for the vendor files that are not.
 
+## See It: RISC-V SoC Visualizations
+
+Everything in this repository is taught visually on **[nandtier.com](https://www.nandtier.com)**: an in-browser RISC-V SoC emulator, a cycle-by-cycle CPU datapath, the bus, the UART, HDMI and the picture processor. Click any picture to open it.
+
+<table>
+<tr>
+<td width="50%" valign="top"><a href="https://www.nandtier.com/soclab/"><img src="docs/images/riscv-soc-emulator-browser.jpg" alt="NandTier RISC-V SoC emulator running in the browser: games, C source, schematic and CPU state" width="100%"></a><br>
+<b><a href="https://www.nandtier.com/soclab/">RISC-V SoC emulator in the browser</a></b><br>
+Run the real firmware and the eight games, step the CPU and watch the bus. No board needed.</td>
+<td width="50%" valign="top"><a href="https://www.nandtier.com/lessons/1-9-the-whole-datapath.html"><img src="docs/images/riscv-cpu-datapath-visualization.jpg" alt="RISC-V RV32IM CPU datapath visualization: PC, register file, ALU, load-store unit" width="100%"></a><br>
+<b><a href="https://www.nandtier.com/lessons/1-9-the-whole-datapath.html">RISC-V CPU core visualization</a></b><br>
+Every RV32IM instruction through fetch, decode, execute and memory, cycle by cycle.</td>
+</tr>
+<tr>
+<td valign="top"><a href="https://www.nandtier.com/blog/bus-and-memory-map.html"><img src="docs/images/riscv-soc-block-diagram.jpg" alt="RISC-V SoC block diagram: CPU, address decoder, flash XIP cache, SRAM, UART, GPIO, SD card, HDMI video" width="100%"></a><br>
+<b><a href="https://www.nandtier.com/blog/bus-and-memory-map.html">RISC-V SoC architecture</a></b><br>
+The bus, the address decoder and the memory map of a complete system-on-chip.</td>
+<td valign="top"><a href="https://www.nandtier.com/blog/getting-started.html"><img src="docs/images/riscv-fpga-setup-pc-board-hdmi.jpg" alt="RISC-V FPGA project setup: host PC, Tang Nano 9K FPGA board and HDMI monitor" width="100%"></a><br>
+<b><a href="https://www.nandtier.com/blog/getting-started.html">RISC-V FPGA project setup</a></b><br>
+A host PC, a $25 Tang Nano 9K and an HDMI screen. Two cables.</td>
+</tr>
+<tr>
+<td valign="top"><a href="https://www.nandtier.com/blog/first-game.html"><img src="docs/images/riscv-games-on-fpga.png" alt="Eight RISC-V games on an FPGA: Hopper, Snake, Brick Breaker, Alien Raid, Pong, Block Drop, Flappy Chip and Road Rush" width="100%"></a><br>
+<b><a href="https://www.nandtier.com/blog/first-game.html">RISC-V games on FPGA</a></b><br>
+Eight games written in C for the NandTier picture processor, loaded from the SD card.</td>
+<td valign="top"><a href="https://www.nandtier.com/lessons/"><img src="docs/images/riscv-cpu-interactive-lab.jpg" alt="Interactive RISC-V CPU lab: step a program and watch the datapath" width="100%"></a><br>
+<b><a href="https://www.nandtier.com/lessons/">88 free lessons</a></b><br>
+From logic gates to a RISC-V CPU, an SoC, HDMI video and games, with a voiced film for each lesson.</td>
+</tr>
+</table>
+
 ## Quick Start
 
 No FPGA tools yet? Download `nandtier-tangnano9k.fs` from the [latest release](https://github.com/NandTier/nandtier/releases/latest) and load it with `openFPGALoader -b tangnano9k nandtier-tangnano9k.fs`. To build everything yourself:
@@ -46,6 +77,7 @@ python3 sw/gamepad.py /dev/ttyUSB1   # play: the PC keyboard is the controller
 
 ## Contents
 
+- [See It: RISC-V SoC Visualizations](#see-it-risc-v-soc-visualizations)
 - [Setting Up](#setting-up)
 - [Project Structure](#project-structure)
 - [Hardware](#hardware): clocks, CPU, address map, HDMI, resources, boards
@@ -53,6 +85,7 @@ python3 sw/gamepad.py /dev/ttyUSB1   # play: the PC keyboard is the controller
 - [Games](#games): how they work, playing, writing your own
 - [Testing](#testing)
 - [Known Issues](#known-issues)
+- [Learn RISC-V and FPGA Design](#learn-risc-v-and-fpga-design)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -88,6 +121,9 @@ The script then:
 5. Checks every tool and builds the firmware.
 
 Run it again at any time: it only does what is missing.
+
+> [!TIP]
+> **Learn it on nandtier.com:** [Installation & Getting Started](https://www.nandtier.com/blog/getting-started.html) · [Setup guide](https://www.nandtier.com/setup/) · [From the reset button to start.S](https://www.nandtier.com/lessons/a-1-from-the-reset-button-to-start-s.html)
 
 ### Without Internet
 
@@ -166,6 +202,11 @@ The 24.975 MHz clock drives the CPU, the bus and the 640x480 pixel output (59.46
 
 ### CPU Core
 
+<p align="center">
+  <a href="https://www.nandtier.com/lessons/1-9-the-whole-datapath.html"><img src="docs/images/riscv-cpu-datapath-visualization.jpg" alt="RISC-V CPU datapath of the NandTier RV32IM core" width="49%"></a>
+  <a href="https://www.nandtier.com/lessons/1-1-what-a-cpu-actually-does.html"><img src="docs/images/riscv-cpu-interactive-lab.jpg" alt="Interactive RISC-V CPU lab in the browser" width="49%"></a>
+</p>
+
 `nandtier_core` is a multi-cycle RV32IM core. One instruction at a time goes through the stage modules in `hw/core/`:
 
 | Stage   | Module       | Work |
@@ -186,7 +227,14 @@ The 24.975 MHz clock drives the CPU, the bus and the 640x480 pixel output (59.46
 
 Bus protocol, followed by every slave: `mem_valid` stays high until `mem_ready`, with address and data held stable. `mem_addr` is word aligned, `mem_wstrb` is zero for reads, and `mem_instr` marks instruction fetches. After every transfer `mem_valid` is low for at least one cycle.
 
+> [!TIP]
+> **Learn it on nandtier.com:** [Our First CPU: Fetch and Decode](https://www.nandtier.com/blog/cpu-fetch-decode.html) · [Execute, Memory and Control](https://www.nandtier.com/blog/cpu-execute.html) · [The whole datapath](https://www.nandtier.com/lessons/1-9-the-whole-datapath.html) · [Multiply and divide (M extension)](https://www.nandtier.com/lessons/1-10-multiply-and-divide.html)
+
 ### Address Map
+
+<p align="center">
+  <a href="https://www.nandtier.com/blog/bus-and-memory-map.html"><img src="docs/images/riscv-soc-block-diagram.jpg" alt="RISC-V SoC bus and memory map block diagram" width="70%"></a>
+</p>
 
 | Address | Size | Device |
 |---------|------|--------|
@@ -286,7 +334,15 @@ nt_cpu_resume
 
 This is custom project-specific debug access over the ECP5 user chain, not a RISC-V Debug Module/DTM. OpenOCD can run the Tcl commands, but its standard RISC-V target and GDB integration are not supported. The adapter configuration depends on the JTAG probe. CPU register and PC access requires a halted core; a trapped core can be inspected but cannot resume without reset. Tang Nano Gowin JTAG support is also not included yet.
 
+> [!TIP]
+> **Learn it on nandtier.com:** [The Bus and the Memory Map](https://www.nandtier.com/blog/bus-and-memory-map.html) · [The bus handshake](https://www.nandtier.com/lessons/2-4-the-bus-handshake.html) · [The address decoder](https://www.nandtier.com/lessons/2-5-the-address-decoder-and-memory-map.html)
+
 ### HDMI Output
+
+<p align="center">
+  <a href="https://www.nandtier.com/blog/hdmi.html"><img src="docs/images/hdmi-tmds-encoder-verilog.jpg" alt="HDMI DVI TMDS encoder in Verilog, step by step" width="49%"></a>
+  <a href="https://www.nandtier.com/lessons/4-4-the-ppu-in-3d-from-a-store-to-a-pixel.html"><img src="docs/images/ppu-3d-store-to-pixel-lesson.jpg" alt="NES-style picture processing unit (PPU) in 3D: from a store to a pixel" width="49%"></a>
+</p>
 
 `hw/video/nt_video.v` produces 640x480 DVI over the HDMI connector. The TMDS encoding follows DVI 1.0. Each lane, the clock lane included, goes through a Gowin OSER10 and an ELVDS_OBUF.
 
@@ -315,7 +371,15 @@ Exact bit layouts are in the header comment of `nt_ppu.v` and as macros (`PPU_*`
 - **Printable characters:** 0x20-0x7E print at the cursor, and lines wrap at column 80.
 - **Control characters:** LF starts a new line (scrolling at the bottom), CR returns to column 0, BS erases the character before the cursor, TAB moves to the next multiple of 8, and FF or EOT clears the screen.
 
+> [!TIP]
+> **Learn it on nandtier.com:** [DVI on HDMI from Scratch: Timing and TMDS](https://www.nandtier.com/blog/hdmi.html) · [Tiles and Sprites: a Picture Processor](https://www.nandtier.com/blog/ppu.html) · [Bits on the HDMI cable](https://www.nandtier.com/lessons/4-3-bits-on-the-hdmi-cable.html) · [The PPU in 3D](https://www.nandtier.com/lessons/4-4-the-ppu-in-3d-from-a-store-to-a-pixel.html)
+
 ### FPGA Resources
+
+<p align="center">
+  <a href="https://www.nandtier.com/lessons/5-4-yosys-and-netlistsvg-from-verilog-to-cells.html"><img src="docs/images/yosys-synthesis-netlist.jpg" alt="Yosys synthesis of Verilog into FPGA cells (netlistsvg)" width="49%"></a>
+  <a href="https://www.nandtier.com/lessons/5-5-nextpnr-placing-and-routing.html"><img src="docs/images/nextpnr-fpga-place-and-route.jpg" alt="nextpnr place and route of the RISC-V SoC on a Gowin FPGA" width="49%"></a>
+</p>
 
 Gowin IDE synthesis and place-and-route of the whole SoC (GW1NR-9C,
 Gowin V1.9.9.03 Education):
@@ -332,7 +396,15 @@ Gowin V1.9.9.03 Education):
 The place-and-route report lists the 26 block RAMs as 8 SP, 16 SDPB and
 2 pROM. Block RAM is fully occupied in this Gowin build.
 
+> [!TIP]
+> **Learn it on nandtier.com:** [Yosys: from Verilog to cells](https://www.nandtier.com/lessons/5-4-yosys-and-netlistsvg-from-verilog-to-cells.html) · [nextpnr: placing and routing](https://www.nandtier.com/lessons/5-5-nextpnr-placing-and-routing.html) · [Reading the reports](https://www.nandtier.com/lessons/5-7-reading-the-reports.html) · [Static timing analysis](https://www.nandtier.com/lessons/6-8-static-timing-analysis.html)
+
 ### Boards and Open-Source Builds
+
+<p align="center">
+  <a href="https://www.nandtier.com/lessons/2-2-meet-the-board.html"><img src="docs/images/tang-nano-9k-board-layout.jpg" alt="Sipeed Tang Nano 9K FPGA board layout (Gowin GW1NR-9C)" width="49%"></a>
+  <a href="https://www.nandtier.com/lessons/6-6-the-tang-nano-9k-net-by-net.html"><img src="docs/images/tang-nano-9k-fpga-schematic.jpg" alt="Tang Nano 9K schematic: GW1NR-9 FPGA, flash, HDMI, microSD, UART" width="49%"></a>
+</p>
 
 | Board | FPGA | Clock in | HDMI | Firmware in flash at | `BOARD=` |
 |-------|------|----------|------|----------------------|----------|
@@ -389,6 +461,9 @@ Results (nextpnr):
 
 Then add the board to `BOARDS` in `oss/Makefile`.
 
+> [!TIP]
+> **Learn it on nandtier.com:** [Meet the board](https://www.nandtier.com/lessons/2-2-meet-the-board.html) · [The Tang Nano 9K, net by net](https://www.nandtier.com/lessons/6-6-the-tang-nano-9k-net-by-net.html) · [The open-source toolbox](https://www.nandtier.com/lessons/5-3-the-open-source-toolbox.html) · [One design, three FPGA families](https://www.nandtier.com/lessons/5-9-one-design-three-fpga-families-and-a-real-chip.html)
+
 ## Firmware
 
 ### Dependencies
@@ -408,6 +483,10 @@ make games      # games        -> fw/games/*/build/<game>.bin, packed into fw/ga
 Everything is built with `-march=rv32i` (`rv32i_zicsr` with GCC 12 and later). Shared build rules are in `fw/common.mk`.
 
 ### Boot ROM and Flash Programming
+
+<p align="center">
+  <a href="https://www.nandtier.com/lessons/3-2-the-boot-rom.html"><img src="docs/images/riscv-boot-rom-uart-protocol.jpg" alt="RISC-V boot ROM deep dive: the UART flash programming protocol" width="70%"></a>
+</p>
 
 After reset the boot ROM listens on the UART (115200 baud) for half a second. If the programmer sends `0x55`, it answers `0x56` and serves programmer commands. Otherwise it jumps to the firmware at `0x0000_0000`.
 
@@ -433,6 +512,9 @@ The protocol is documented at the top of `fw/fw-brom/isp.c`:
 | `F0` | `F1` | restart the boot ROM |
 
 **Boot ROM service for the firmware:** `0x8000_0054` is a fixed entry point to `flash_io(buf, len, wren)`. It runs one SPI flash command with XIP off, from boot RAM; the firmware uses it to read the flash ID (`nt_flash_io` in `nandtier.h`). The boot ROM is built without gp-relative addressing, so the routine works with the firmware's gp.
+
+> [!TIP]
+> **Learn it on nandtier.com:** [From C to the Chip: Boot ROM and Linker Scripts](https://www.nandtier.com/blog/from-c-to-the-chip.html) · [Reading from the External Flash](https://www.nandtier.com/blog/external-flash.html) · [The boot ROM](https://www.nandtier.com/lessons/3-2-the-boot-rom.html) · [New firmware into the flash](https://www.nandtier.com/lessons/a-3-new-firmware-into-the-flash.html)
 
 ### Updating the Boot ROM in the FPGA
 
@@ -460,7 +542,14 @@ make program COMx=/dev/ttyUSB1 SD_IMAGE=picture.hex SD_START_BLOCK=2048 SD_MAX_S
 
 SD initialisation status codes (from `fw/common/sd.h`): `0x00` success, `0x1n` CMD0 failed, `0x2n` CMD8 failed, `0x30` CMD8 echo wrong (the two echo bytes follow), `0x4n` CMD55 failed, `0x05` ACMD41 timed out, `0x6n` CMD16 failed.
 
+> [!TIP]
+> **Learn it on nandtier.com:** [SD Cards over SPI](https://www.nandtier.com/blog/sd-card.html) · [The SD card port](https://www.nandtier.com/lessons/2-9-the-sd-card-port.html)
+
 ### User Firmware
+
+<p align="center">
+  <a href="https://www.nandtier.com/blog/uart.html"><img src="docs/images/uart-terminal-menu-riscv.png" alt="NandTier UART terminal menu on the RISC-V SoC (115200 baud)" width="60%"></a>
+</p>
 
 The firmware shows a menu on the UART (115200 baud) and on the HDMI terminal:
 
@@ -475,7 +564,17 @@ The firmware shows a menu on the UART (115200 baud) and on the HDMI terminal:
 | `P` | game menu on the HDMI screen (see Games) |
 | `M` | about |
 
+> [!TIP]
+> **Learn it on nandtier.com:** [Debugging & UART](https://www.nandtier.com/blog/uart.html) · [The UART](https://www.nandtier.com/lessons/2-7-the-uart.html) · [The launcher](https://www.nandtier.com/blog/launcher.html)
+
 ## Games
+
+<p align="center">
+  <a href="https://www.nandtier.com/blog/first-game.html"><img src="docs/images/riscv-games-on-fpga.png" alt="Title screens of the eight NandTier RISC-V games and the UART menu" width="70%"></a>
+</p>
+
+> [!TIP]
+> **Learn it on nandtier.com:** [Our First Game: Snake](https://www.nandtier.com/blog/first-game.html) · [The Launcher: Loading Games from the SD Card](https://www.nandtier.com/blog/launcher.html) · [The game loop](https://www.nandtier.com/lessons/4-7-the-game-loop.html) · [Making a game](https://www.nandtier.com/lessons/4-8-making-a-game-flappy-hopper-and-invaders.html)
 
 ### How It Works
 
@@ -624,12 +723,32 @@ make -C sim carts GOWIN_HOME=<Gowin IDE directory>  # game menu on the RTL: Pong
 
 The firmware run takes several minutes. To keep it shorter, the testbench speeds up the cycle counter until the menu appears and runs the UART at 8 cycles per bit.
 
+> [!TIP]
+> **Learn it on nandtier.com:** [Testing Everything: Testbenches and Simulation](https://www.nandtier.com/blog/testing.html) · [Testbenches and simulation](https://www.nandtier.com/lessons/h-6-testbenches-and-simulation.html) · [cocotb testbenches in Python](https://www.nandtier.com/lessons/h-7-cocotb-testbenches-in-python.html)
+
 ## Known Issues
 
 - **Cache misses:** code outside the 4 KiB cache still runs at flash speed. A miss costs about 150-300 cycles in dual I/O mode. Keep hot loops small and close together.
 - **No sound:** there is no audio output.
 - **Flash wear:** each switch to a different game rewrites its sectors of the cartridge slot. The flash is rated for about 100,000 erases per sector, and starting the same game again does not write anything.
 - **SD card writes over the UART are slow:** about 10 KiB/s, so the 196 KB pack takes about 25 s. Use a card reader and dd for big packs.
+
+## Learn RISC-V and FPGA Design
+
+NandTier is also a free course, **Gates to Games**, at [www.nandtier.com](https://www.nandtier.com): from the first logic gate to a RISC-V CPU, a system-on-chip, HDMI video and games on an FPGA.
+
+| Topic | Blog posts | Lessons |
+|:------|:-----------|:--------|
+| Logic gates to an ALU | [Lessons 0.1-0.8](https://www.nandtier.com/lessons/0-3-gates-and-why-nand-is-enough.html) | [Adders](https://www.nandtier.com/lessons/0-4-adders.html), [a 4-bit ALU](https://www.nandtier.com/lessons/0-5-multiplexers-decoders-and-a-4-bit-alu.html) |
+| RISC-V CPU core in Verilog | [Fetch and Decode](https://www.nandtier.com/blog/cpu-fetch-decode.html), [Execute](https://www.nandtier.com/blog/cpu-execute.html) | [Register file](https://www.nandtier.com/lessons/1-5-the-register-file.html), [datapath](https://www.nandtier.com/lessons/1-9-the-whole-datapath.html) |
+| RISC-V SoC: bus, memory map, UART | [Bus and Memory Map](https://www.nandtier.com/blog/bus-and-memory-map.html), [UART](https://www.nandtier.com/blog/uart.html) | [SoC at a glance](https://www.nandtier.com/lessons/2-1-the-soc-at-a-glance.html), [the UART](https://www.nandtier.com/lessons/2-7-the-uart.html) |
+| Boot ROM, flash, SD card | [From C to the Chip](https://www.nandtier.com/blog/from-c-to-the-chip.html), [SD over SPI](https://www.nandtier.com/blog/sd-card.html) | [Boot ROM](https://www.nandtier.com/lessons/3-2-the-boot-rom.html), [running from flash](https://www.nandtier.com/lessons/2-10-running-code-from-flash.html) |
+| HDMI and a picture processor | [HDMI from Scratch](https://www.nandtier.com/blog/hdmi.html), [Tiles and Sprites](https://www.nandtier.com/blog/ppu.html) | [Racing the beam](https://www.nandtier.com/lessons/4-2-racing-the-beam.html), [PPU in 3D](https://www.nandtier.com/lessons/4-4-the-ppu-in-3d-from-a-store-to-a-pixel.html) |
+| RISC-V games | [Our First Game](https://www.nandtier.com/blog/first-game.html), [The Launcher](https://www.nandtier.com/blog/launcher.html) | [Game SDK](https://www.nandtier.com/lessons/3-5-the-game-sdk.html), [making a game](https://www.nandtier.com/lessons/4-8-making-a-game-flappy-hopper-and-invaders.html) |
+| Open-source FPGA toolchain | [Getting Started](https://www.nandtier.com/blog/getting-started.html) | [Yosys](https://www.nandtier.com/lessons/5-4-yosys-and-netlistsvg-from-verilog-to-cells.html), [nextpnr](https://www.nandtier.com/lessons/5-5-nextpnr-placing-and-routing.html) |
+| Verilog, C and testing | [Testing Everything](https://www.nandtier.com/blog/testing.html) | [Verilog in one sitting](https://www.nandtier.com/lessons/h-1-verilog-in-one-sitting.html), [C for hardware people](https://www.nandtier.com/lessons/c-1-c-for-hardware-people.html) |
+
+Try it without a board in the **[RISC-V SoC emulator](https://www.nandtier.com/soclab/)**, browse **[all 88 lessons](https://www.nandtier.com/lessons/)**, or pick a **[capstone project](https://www.nandtier.com/lessons/5-10-capstone-projects.html)**.
 
 ## Contributing
 
@@ -650,3 +769,9 @@ If NandTier helps you learn or teach, a star helps other people find it.
 Copyright 2024-2026 Abdul Muheet Ghani. Licensed under the Apache License, Version 2.0; see [LICENSE](LICENSE) and [NOTICE](NOTICE). Each source file carries an `SPDX-License-Identifier: Apache-2.0` header.
 
 NandTier began as a modified copy of the Sipeed "picotiny" Tang Nano 9K example. It contained PicoRV32/PicoSoC and SimpleVOut by Clifford Wolf (ISC), an SD SPI controller by Grug Huhler (BSD-2-Clause), and simulation models by Alex Forencich (MIT) and PUYA Semiconductor. All of these have been replaced by new implementations; none of their code remains in the sources.
+
+### Trademarks
+
+RISC-V is a registered trademark of RISC-V International. Tang Nano is a product of Sipeed, Gowin a trademark of Gowin Semiconductor, and NES a trademark of Nintendo; "NES-style" only describes the kind of tile and sprite engine. NandTier is an independent project and is not affiliated with or endorsed by any of them.
+
+The pictures in `docs/images/` come from [nandtier.com](https://www.nandtier.com) and are part of this project, under the same license.
